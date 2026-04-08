@@ -77,6 +77,11 @@ Run these three commands inside any Claude Code session:
 /reload-plugins
 ```
 
+Choose a scope when prompted:
+- **User** — available in all your projects (recommended)
+- **Project** — installs into `.claude/plugins/` for the whole team
+- **Local** — project-scoped but only for you
+
 Skills are available as:
 
 - `/glab:glab-auth`
@@ -85,6 +90,8 @@ Skills are available as:
 - `/glab:glab-ci`
 
 The auth guard hook activates automatically once the plugin is installed.
+
+> **Note:** The official Anthropic marketplace includes a `gitlab` plugin that connects via MCP. This plugin is different: it wraps the `glab` CLI using skills, which load progressively and use far less context than MCP tool definitions loaded at session start.
 
 ## Test locally before installing
 
@@ -164,7 +171,9 @@ Skills with `disable-model-invocation: true` require explicit invocation. Claude
 
 | Hook | Trigger | What it does |
 |------|---------|--------------|
-| glab-auth-guard.sh | PostToolUse (Bash) | Detects auth errors in glab output and tells Claude to prompt for authentication |
+| glab-auth-guard.sh | PostToolUse + PostToolUseFailure (Bash) | Detects auth errors in glab output and tells Claude to prompt for authentication |
+
+The hook uses an `if: "Bash(glab *)"` condition so it only spawns when a `glab` command is involved, not on every Bash call.
 
 ### Settings
 
