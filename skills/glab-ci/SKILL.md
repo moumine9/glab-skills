@@ -2,6 +2,7 @@
 name: glab-ci
 description: View, manage, and retry GitLab CI/CD pipelines and jobs using the glab CLI. Use when the user wants to check pipeline status, trace job logs, or trigger a pipeline.
 user-invocable: true
+disable-model-invocation: true
 argument-hint: "[status|list|view|retry|trace|cancel|run] [options]"
 model: haiku
 effort: low

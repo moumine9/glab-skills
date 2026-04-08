@@ -86,6 +86,14 @@ Skills are available as:
 
 The auth guard hook activates automatically once the plugin is installed.
 
+## Test locally before installing
+
+```bash
+claude --plugin-dir ./
+```
+
+This loads the plugin from the current directory without installing it. Use `/reload-plugins` to pick up changes without restarting.
+
 ## Manual install
 
 ### Skills
@@ -143,12 +151,14 @@ cp .claude/settings.local.json <your-project>/.claude/settings.local.json
 
 ### Skills
 
-| Skill | Plugin trigger | Standalone trigger | Description |
-|-------|---------------|--------------------|-------------|
-| glab-auth | `/glab:glab-auth` | `/glab-auth` | Login, logout, or check auth status |
-| glab-mr | `/glab:glab-mr` | `/glab-mr` | Create, view, list, merge, approve, diff, and checkout merge requests |
-| glab-issue | `/glab:glab-issue` | `/glab-issue` | Create, view, list, close, and comment on issues |
-| glab-ci | `/glab:glab-ci` | `/glab-ci` | View pipeline status, trace job logs, and retry failed jobs |
+| Skill | Plugin trigger | Standalone trigger | Description | Auto-invoked |
+|-------|---------------|--------------------|-------------|-------------|
+| glab-auth | `/glab:glab-auth` | `/glab-auth` | Login, logout, or check auth status | No |
+| glab-mr | `/glab:glab-mr` | `/glab-mr` | Create, view, list, merge, approve, diff, and checkout merge requests | No |
+| glab-issue | `/glab:glab-issue` | `/glab-issue` | Create, view, list, close, and comment on issues | No |
+| glab-ci | `/glab:glab-ci` | `/glab-ci` | View pipeline status, trace job logs, and retry failed jobs | No |
+
+Skills with `disable-model-invocation: true` require explicit invocation. Claude will not trigger them automatically.
 
 ### Hooks
 

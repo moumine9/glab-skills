@@ -2,6 +2,7 @@
 name: glab-auth
 description: Manage glab authentication — login, logout, or check status. Use when the user needs to authenticate with GitLab or when a previous command failed with an auth error.
 user-invocable: true
+disable-model-invocation: true
 argument-hint: "[login|logout|status]"
 model: haiku
 effort: low

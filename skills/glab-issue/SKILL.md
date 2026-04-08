@@ -2,6 +2,7 @@
 name: glab-issue
 description: Create, view, list, close, or comment on GitLab issues using the glab CLI. Use when the user wants to manage GitLab issues from the terminal.
 user-invocable: true
+disable-model-invocation: true
 argument-hint: "[create|view|list|close|note|update|reopen] [options]"
 model: haiku
 effort: low

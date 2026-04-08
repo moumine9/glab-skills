@@ -2,6 +2,7 @@
 name: glab-mr
 description: Create, view, list, merge, approve, diff, or checkout GitLab merge requests using the glab CLI. Use when the user wants to work with MRs from the terminal.
 user-invocable: true
+disable-model-invocation: true
 argument-hint: "[create|view|list|merge|approve|diff|checkout|close|update] [options]"
 model: haiku
 effort: low
