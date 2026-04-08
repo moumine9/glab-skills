@@ -1,4 +1,4 @@
-# claude-glab
+# glab
 
 Claude Code skills and hooks for working with GitLab via the `glab` CLI.
 
@@ -22,17 +22,17 @@ This repo contains Claude Code skills for common GitLab operations (MRs, issues,
 Inside any Claude Code session:
 
 ```
-/plugin marketplace add moumine9/claude-glab
-/plugin install claude-glab
+/plugin marketplace add moumine9/glab
+/plugin install glab
 /reload-plugins
 ```
 
 Skills are then available as:
 
-- `/claude-glab:glab-auth`
-- `/claude-glab:glab-mr`
-- `/claude-glab:glab-issue`
-- `/claude-glab:glab-ci`
+- `/glab:glab-auth`
+- `/glab:glab-mr`
+- `/glab:glab-issue`
+- `/glab:glab-ci`
 
 The auth guard hook activates automatically once the plugin is installed.
 
@@ -148,10 +148,10 @@ cp .claude/settings.local.json <your-project>/.claude/settings.local.json
 
 | Skill | Plugin trigger | Standalone trigger | Description |
 |-------|---------------|-------------------|-------------|
-| glab-auth | `/claude-glab:glab-auth` | `/glab-auth` | Login, logout, or check auth status |
-| glab-mr | `/claude-glab:glab-mr` | `/glab-mr` | Create, view, list, merge, approve, diff, checkout MRs |
-| glab-issue | `/claude-glab:glab-issue` | `/glab-issue` | Create, view, list, close, comment on issues |
-| glab-ci | `/claude-glab:glab-ci` | `/glab-ci` | View pipeline status, trace job logs, retry failed jobs |
+| glab-auth | `/glab:glab-auth` | `/glab-auth` | Login, logout, or check auth status |
+| glab-mr | `/glab:glab-mr` | `/glab-mr` | Create, view, list, merge, approve, diff, checkout MRs |
+| glab-issue | `/glab:glab-issue` | `/glab-issue` | Create, view, list, close, comment on issues |
+| glab-ci | `/glab:glab-ci` | `/glab-ci` | View pipeline status, trace job logs, retry failed jobs |
 
 ---
 
