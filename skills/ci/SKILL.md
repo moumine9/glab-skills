@@ -1,5 +1,5 @@
 ---
-name: glab-ci
+name: ci
 description: View, manage, and retry GitLab CI/CD pipelines and jobs using the glab CLI. Use when the user wants to check pipeline status, trace job logs, or trigger a pipeline.
 user-invocable: true
 disable-model-invocation: true
@@ -101,3 +101,7 @@ If the user asks "why did my pipeline fail", run:
 ### 4. Output
 
 Show the command output. For failures, highlight the failed job name and the last few lines of its log.
+
+---
+
+For a complete list of subcommands and flags, see [docs/reference.md](../../docs/reference.md#glab-ci).

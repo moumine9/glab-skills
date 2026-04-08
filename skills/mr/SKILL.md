@@ -1,5 +1,5 @@
 ---
-name: glab-mr
+name: mr
 description: Create, view, list, merge, approve, diff, or checkout GitLab merge requests using the glab CLI. Use when the user wants to work with MRs from the terminal.
 user-invocable: true
 disable-model-invocation: true
@@ -105,3 +105,7 @@ Other update flags: `--draft`, `--ready`, `--assignee`, `--reviewer`, `--label`,
 ### 3. Output
 
 Show the command output. For `create`, print the MR URL. For `list`, summarize the count and show the most relevant items.
+
+---
+
+For a complete list of subcommands and flags, see [docs/reference.md](../../docs/reference.md#glab-mr).

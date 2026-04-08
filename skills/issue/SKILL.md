@@ -1,5 +1,5 @@
 ---
-name: glab-issue
+name: issue
 description: Create, view, list, close, or comment on GitLab issues using the glab CLI. Use when the user wants to manage GitLab issues from the terminal.
 user-invocable: true
 disable-model-invocation: true
@@ -86,3 +86,7 @@ glab issue reopen <number>
 ### 3. Output
 
 Show the command output. For `create`, print the issue URL. For `list`, summarize results and highlight open/unassigned items.
+
+---
+
+For a complete list of subcommands and flags, see [docs/reference.md](../../docs/reference.md#glab-issue).

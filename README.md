@@ -84,10 +84,10 @@ Choose a scope when prompted:
 
 Skills are available as:
 
-- `/glab:glab-auth`
-- `/glab:glab-mr`
-- `/glab:glab-issue`
-- `/glab:glab-ci`
+- `/glab:auth`
+- `/glab:mr`
+- `/glab:issue`
+- `/glab:ci`
 
 The auth guard hook activates automatically once the plugin is installed.
 
@@ -108,18 +108,18 @@ This loads the plugin from the current directory without installing it. Use `/re
 Copy each skill directory into `~/.claude/skills/`:
 
 ```bash
-cp -r skills/glab-auth ~/.claude/skills/
-cp -r skills/glab-mr ~/.claude/skills/
-cp -r skills/glab-issue ~/.claude/skills/
-cp -r skills/glab-ci ~/.claude/skills/
+cp -r skills/auth ~/.claude/skills/
+cp -r skills/mr ~/.claude/skills/
+cp -r skills/issue ~/.claude/skills/
+cp -r skills/ci ~/.claude/skills/
 ```
 
 Standalone triggers (without the plugin namespace):
 
-- `/glab-auth`
-- `/glab-mr`
-- `/glab-issue`
-- `/glab-ci`
+- `/auth`
+- `/mr`
+- `/issue`
+- `/ci`
 
 ### Auth guard hook
 
@@ -160,10 +160,10 @@ cp .claude/settings.local.json <your-project>/.claude/settings.local.json
 
 | Skill | Plugin trigger | Standalone trigger | Description | Auto-invoked |
 |-------|---------------|--------------------|-------------|-------------|
-| glab-auth | `/glab:glab-auth` | `/glab-auth` | Login, logout, or check auth status | No |
-| glab-mr | `/glab:glab-mr` | `/glab-mr` | Create, view, list, merge, approve, diff, and checkout merge requests | No |
-| glab-issue | `/glab:glab-issue` | `/glab-issue` | Create, view, list, close, and comment on issues | No |
-| glab-ci | `/glab:glab-ci` | `/glab-ci` | View pipeline status, trace job logs, and retry failed jobs | No |
+| auth | `/glab:auth` | `/auth` | Login, logout, or check auth status | No |
+| mr | `/glab:mr` | `/mr` | Create, view, list, merge, approve, diff, and checkout merge requests | No |
+| issue | `/glab:issue` | `/issue` | Create, view, list, close, and comment on issues | No |
+| ci | `/glab:ci` | `/ci` | View pipeline status, trace job logs, and retry failed jobs | No |
 
 Skills with `disable-model-invocation: true` require explicit invocation. Claude will not trigger them automatically.
 

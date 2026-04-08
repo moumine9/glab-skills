@@ -1,5 +1,5 @@
 ---
-name: glab-auth
+name: auth
 description: Manage glab authentication — login, logout, or check status. Use when the user needs to authenticate with GitLab or when a previous command failed with an auth error.
 user-invocable: true
 disable-model-invocation: true
@@ -77,3 +77,7 @@ glab auth status
 ### 4. Output
 
 Tell the user whether the action succeeded and which account is now active.
+
+---
+
+For a complete list of subcommands and flags, see [docs/reference.md](../../docs/reference.md#glab-auth).
