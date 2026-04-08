@@ -156,14 +156,17 @@ cp .claude/settings.local.json <your-project>/.claude/settings.local.json
 
 ## Reference
 
+- [docs/commands.md](docs/commands.md) — all available commands at a glance
+- [docs/reference.md](docs/reference.md) — full reference with flags and examples
+
 ### Skills
 
 | Skill | Plugin trigger | Standalone trigger | Description | Auto-invoked |
 |-------|---------------|--------------------|-------------|-------------|
-| auth | `/glab:auth` | `/auth` | Login, logout, or check auth status | No |
-| mr | `/glab:mr` | `/mr` | Create, view, list, merge, approve, diff, and checkout merge requests | No |
-| issue | `/glab:issue` | `/issue` | Create, view, list, close, and comment on issues | No |
-| ci | `/glab:ci` | `/ci` | View pipeline status, trace job logs, and retry failed jobs | No |
+| auth | `/glab:auth` | `/auth` | Auth flows, Docker credentials, tokens, and key management | No |
+| mr | `/glab:mr` | `/mr` | Full MR lifecycle: create, review, merge, and stacked diffs | No |
+| issue | `/glab:issue` | `/issue` | Create, manage, board view, and track issues | No |
+| ci | `/glab:ci` | `/ci` | Pipelines, jobs, schedules, runners, and CI variables | No |
 
 Skills with `disable-model-invocation: true` require explicit invocation. Claude will not trigger them automatically.
 
