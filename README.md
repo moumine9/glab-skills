@@ -6,7 +6,7 @@ Claude Code skills and hooks for working with GitLab via the `glab` CLI.
 
 ## What's in here
 
-This repo contains Claude Code skills for common GitLab operations (MRs, issues, CI), a PostToolUse hook that detects authentication errors and prompts you to log in, and a `settings.local.json` with pre-approved glab command permissions. Copy the pieces you need into your Claude Code setup.
+This repo contains Claude Code skills for common GitLab operations (MRs, issues, CI), a PostToolUse hook that detects authentication errors and prompts you to log in, and a `settings.local.json` with pre-approved glab command permissions. Install it as a plugin or copy the pieces you need manually.
 
 ---
 
@@ -14,6 +14,27 @@ This repo contains Claude Code skills for common GitLab operations (MRs, issues,
 
 - `glab` CLI installed
 - Claude Code installed
+
+---
+
+## Install as a plugin (recommended)
+
+Inside any Claude Code session:
+
+```
+/plugin marketplace add moumine9/claude-glab
+/plugin install claude-glab
+/reload-plugins
+```
+
+Skills are then available as:
+
+- `/claude-glab:glab-auth`
+- `/claude-glab:glab-mr`
+- `/claude-glab:glab-issue`
+- `/claude-glab:glab-ci`
+
+The auth guard hook activates automatically once the plugin is installed.
 
 ---
 
@@ -125,12 +146,12 @@ cp .claude/settings.local.json <your-project>/.claude/settings.local.json
 
 ## Skills
 
-| Skill | Trigger | Description |
-|-------|---------|-------------|
-| glab-auth | `/glab-auth` | Login, logout, or check auth status |
-| glab-mr | `/glab-mr` | Create, view, list, merge, approve, diff, checkout MRs |
-| glab-issue | `/glab-issue` | Create, view, list, close, comment on issues |
-| glab-ci | `/glab-ci` | View pipeline status, trace job logs, retry failed jobs |
+| Skill | Plugin trigger | Standalone trigger | Description |
+|-------|---------------|-------------------|-------------|
+| glab-auth | `/claude-glab:glab-auth` | `/glab-auth` | Login, logout, or check auth status |
+| glab-mr | `/claude-glab:glab-mr` | `/glab-mr` | Create, view, list, merge, approve, diff, checkout MRs |
+| glab-issue | `/claude-glab:glab-issue` | `/glab-issue` | Create, view, list, close, comment on issues |
+| glab-ci | `/claude-glab:glab-ci` | `/glab-ci` | View pipeline status, trace job logs, retry failed jobs |
 
 ---
 

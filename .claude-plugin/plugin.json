@@ -1,0 +1,13 @@
+{
+  "name": "claude-glab",
+  "description": "Claude Code skills and hooks for GitLab — manage MRs, issues, and CI pipelines via the glab CLI without leaving your terminal",
+  "version": "1.0.0",
+  "author": {
+    "name": "moumine9",
+    "url": "https://github.com/moumine9"
+  },
+  "homepage": "https://github.com/moumine9/claude-glab",
+  "repository": "https://github.com/moumine9/claude-glab",
+  "license": "MIT",
+  "keywords": ["gitlab", "glab", "cli", "merge-request", "issues", "ci", "claude-code"]
+}
