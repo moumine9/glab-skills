@@ -2,24 +2,74 @@
 
 Claude Code skills and hooks for working with GitLab via the `glab` CLI.
 
----
-
 ## What's in here
 
-This repo contains Claude Code skills for common GitLab operations (MRs, issues, CI), a PostToolUse hook that detects authentication errors and prompts you to log in, and a `settings.local.json` with pre-approved glab command permissions. Install it as a plugin or copy the pieces you need manually.
+This repo has four skills covering common GitLab operations: auth, merge requests, issues, and CI pipelines. It also includes `glab-auth-guard.sh`, a PostToolUse hook that detects authentication errors in glab output and prompts you to log in, and a `settings.local.json` with pre-approved glab command permissions so Claude does not ask for confirmation on every call.
 
----
-
-## Prerequisites
+## Requirements
 
 - `glab` CLI installed
 - Claude Code installed
 
 ---
 
-## Install as a plugin (recommended)
+## Install glab
 
-Inside any Claude Code session:
+macOS:
+```bash
+brew install glab
+```
+
+Windows (winget):
+```bash
+winget install GitLab.GLab
+```
+
+Windows (scoop):
+```bash
+scoop install glab
+```
+
+Linux (apt):
+```bash
+sudo apt install glab
+```
+
+Linux (snap):
+```bash
+sudo snap install glab
+```
+
+Verify the install:
+```bash
+glab --version
+```
+
+## Authenticate
+
+You must authenticate before any glab command will work.
+
+```bash
+glab auth login
+```
+
+For a self-managed GitLab instance:
+```bash
+glab auth login --hostname gitlab.example.com
+```
+
+Check your current auth status:
+```bash
+glab auth status
+```
+
+The `glab-auth-guard.sh` hook runs after every Bash tool call. When it detects an authentication error in glab output, it tells Claude to prompt you to run `glab auth login`.
+
+---
+
+## Plugin install (recommended)
+
+Run these three commands inside any Claude Code session:
 
 ```
 /plugin marketplace add moumine9/glab
@@ -27,7 +77,7 @@ Inside any Claude Code session:
 /reload-plugins
 ```
 
-Skills are then available as:
+Skills are available as:
 
 - `/glab:glab-auth`
 - `/glab:glab-mr`
@@ -36,64 +86,11 @@ Skills are then available as:
 
 The auth guard hook activates automatically once the plugin is installed.
 
----
+## Manual install
 
-## 1. Install glab
+### Skills
 
-**macOS**
-```bash
-brew install glab
-```
-
-**Windows (winget)**
-```bash
-winget install GitLab.GLab
-```
-
-**Windows (scoop)**
-```bash
-scoop install glab
-```
-
-**Linux (apt)**
-```bash
-sudo apt install glab
-# or via snap
-sudo snap install glab
-```
-
-**Check install**
-```bash
-glab --version
-```
-
----
-
-## 2. Authenticate
-
-You must authenticate before any glab command will work.
-
-```bash
-glab auth login
-```
-
-For self-managed GitLab:
-```bash
-glab auth login --hostname gitlab.example.com
-```
-
-Check status:
-```bash
-glab auth status
-```
-
-The `glab-auth-guard.sh` hook watches for authentication errors in glab output and tells Claude to prompt you to authenticate when it sees one.
-
----
-
-## 3. Install skills
-
-Copy each skill into `~/.claude/skills/`:
+Copy each skill directory into `~/.claude/skills/`:
 
 ```bash
 cp -r skills/glab-auth ~/.claude/skills/
@@ -102,16 +99,14 @@ cp -r skills/glab-issue ~/.claude/skills/
 cp -r skills/glab-ci ~/.claude/skills/
 ```
 
-Then invoke them in Claude Code:
+Standalone triggers (without the plugin namespace):
 
 - `/glab-auth`
 - `/glab-mr`
 - `/glab-issue`
 - `/glab-ci`
 
----
-
-## 4. Install the auth guard hook
+### Auth guard hook
 
 Copy the hook and make it executable:
 
@@ -120,23 +115,23 @@ cp hooks/glab-auth-guard.sh ~/.claude/hooks/
 chmod +x ~/.claude/hooks/glab-auth-guard.sh
 ```
 
-Then add the following to `~/.claude/settings.json` under `hooks.PostToolUse`:
+Add the following entry to `~/.claude/settings.json` under `hooks.PostToolUse`:
 
 ```json
 {
   "matcher": "Bash",
-  "hooks": [{
-    "type": "command",
-    "command": "bash \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/glab-auth-guard.sh\""
-  }]
+  "hooks": [
+    {
+      "type": "command",
+      "command": "bash \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/glab-auth-guard.sh\""
+    }
+  ]
 }
 ```
 
----
+### Project permissions
 
-## 5. Project-level permissions
-
-Copy `.claude/settings.local.json` into your project's `.claude/` folder so Claude can run glab commands without approval prompts on each call:
+Copy `.claude/settings.local.json` into your project's `.claude/` folder:
 
 ```bash
 cp .claude/settings.local.json <your-project>/.claude/settings.local.json
@@ -144,25 +139,23 @@ cp .claude/settings.local.json <your-project>/.claude/settings.local.json
 
 ---
 
-## Skills
+## Reference
+
+### Skills
 
 | Skill | Plugin trigger | Standalone trigger | Description |
-|-------|---------------|-------------------|-------------|
+|-------|---------------|--------------------|-------------|
 | glab-auth | `/glab:glab-auth` | `/glab-auth` | Login, logout, or check auth status |
-| glab-mr | `/glab:glab-mr` | `/glab-mr` | Create, view, list, merge, approve, diff, checkout MRs |
-| glab-issue | `/glab:glab-issue` | `/glab-issue` | Create, view, list, close, comment on issues |
-| glab-ci | `/glab:glab-ci` | `/glab-ci` | View pipeline status, trace job logs, retry failed jobs |
+| glab-mr | `/glab:glab-mr` | `/glab-mr` | Create, view, list, merge, approve, diff, and checkout merge requests |
+| glab-issue | `/glab:glab-issue` | `/glab-issue` | Create, view, list, close, and comment on issues |
+| glab-ci | `/glab:glab-ci` | `/glab-ci` | View pipeline status, trace job logs, and retry failed jobs |
 
----
-
-## Hooks
+### Hooks
 
 | Hook | Trigger | What it does |
 |------|---------|--------------|
-| glab-auth-guard.sh | PostToolUse (Bash) | Detects auth errors in glab output and tells Claude to suggest authentication |
+| glab-auth-guard.sh | PostToolUse (Bash) | Detects auth errors in glab output and tells Claude to prompt for authentication |
 
----
+### Settings
 
-## Settings
-
-`.claude/settings.local.json` contains pre-approved permissions for all glab subcommands (`auth`, `mr`, `issue`, `ci`, `repo`, `config`) and common git operations (`log`, `diff`, `push`, `status`, `branch`, `checkout`, `fetch`). It also includes environment context telling Claude to use glab for all GitLab operations and to authenticate first.
+`.claude/settings.local.json` contains pre-approved permissions for all glab subcommands (`auth`, `mr`, `issue`, `ci`, `repo`, `config`) and common git operations, so Claude can run them without asking for confirmation each time.
