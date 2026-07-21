@@ -77,10 +77,7 @@ Run these three commands inside any Claude Code session:
 /reload-plugins
 ```
 
-Choose a scope when prompted:
-- **User** — available in all your projects (recommended)
-- **Project** — installs into `.claude/plugins/` for the whole team
-- **Local** — project-scoped but only for you
+Pick a scope when prompted. User is the one you want most of the time — it's available in every project. Project drops the plugin into `.claude/plugins/` so the whole team gets it. Local keeps it project-scoped and just for you.
 
 Skills are available as:
 
@@ -156,8 +153,8 @@ cp .claude/settings.local.json <your-project>/.claude/settings.local.json
 
 ## Reference
 
-- [docs/commands.md](docs/commands.md) — all available commands at a glance
-- [docs/reference.md](docs/reference.md) — full reference with flags and examples
+- [docs/commands.md](docs/commands.md): every command at a glance
+- [docs/reference.md](docs/reference.md): the full reference, flags and examples included
 
 ### Skills
 
