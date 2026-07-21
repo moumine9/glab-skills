@@ -72,6 +72,18 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 |---------|-------------|
 | `glab job artifact` | Download artifacts from the most recent pipeline |
 
+## glab version
+
+| Command | Description |
+|---------|-------------|
+| `glab version` | Show installed glab version and build commit |
+
+## glab whatsnew
+
+| Command | Description |
+|---------|-------------|
+| `glab whatsnew` | Show release notes for glab versions |
+
 ## glab release
 
 | Command | Description |
@@ -97,11 +109,33 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | `glab repo members add` | Add a member to the project |
 | `glab repo members remove` | Remove a member from the project |
 | `glab repo mirror` | Configure pull or push mirroring |
+| `glab repo prune` | Delete local branches whose MR has been merged |
 | `glab repo publish catalog` * | Publish CI/CD components to catalog |
+| `glab repo remote add` | Add a Git remote for a GitLab project |
 | `glab repo search` | Search repositories by name |
 | `glab repo transfer` | Transfer repository to a new namespace |
 | `glab repo update` | Update project settings |
 | `glab repo view` | View project description and README |
+
+## glab container-registry
+
+| Command | Description |
+|---------|-------------|
+| `glab container-registry repository list` | List container registry repositories |
+| `glab container-registry repository view` | View a container registry repository |
+| `glab container-registry repository delete` | Delete a container registry repository |
+| `glab container-registry tag list` | List tags for a repository |
+| `glab container-registry tag view` | View a container registry tag |
+| `glab container-registry tag delete` | Delete container registry tags |
+
+## glab packages
+
+| Command | Description |
+|---------|-------------|
+| `glab packages list` | List packages in a project's package registry |
+| `glab packages download` | Download a file from the package registry |
+| `glab packages upload` | Upload a file to the package registry |
+| `glab packages delete` | Delete a package from the package registry |
 
 ## glab incident
 
@@ -164,6 +198,7 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | `glab variable delete` | Delete a variable |
 | `glab variable export` | Export all variables |
 | `glab variable get` | Get a variable value |
+| `glab variable import` | Import variables from a JSON file or stdin |
 | `glab variable list` | List all variables |
 | `glab variable set` | Create a new variable |
 | `glab variable update` | Update an existing variable |
@@ -172,7 +207,10 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 
 | Command | Description |
 |---------|-------------|
+| `glab work-items create` * | Create work items in a project or group |
+| `glab work-items delete` * | Delete a work item in a project or group |
 | `glab work-items list` * | List work items in a project or group |
+| `glab work-items update` * | Update work items in a project or group |
 
 ## glab runner
 
@@ -180,7 +218,9 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 |---------|-------------|
 | `glab runner assign` | Assign a runner to a project |
 | `glab runner delete` | Permanently delete a runner |
+| `glab runner jobs` | List jobs processed by a runner |
 | `glab runner list` | List runners |
+| `glab runner managers` | List runner managers |
 | `glab runner unassign` | Unassign a runner from a project |
 | `glab runner update` | Pause or unpause a runner |
 
@@ -190,6 +230,7 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 |---------|-------------|
 | `glab runner-controller create` * | Create a runner controller |
 | `glab runner-controller delete` * | Delete a runner controller |
+| `glab runner-controller get` * | Get details of a runner controller |
 | `glab runner-controller list` * | List runner controllers |
 | `glab runner-controller scope` * | Manage runner controller scopes |
 | `glab runner-controller token` * | Manage runner controller tokens |
@@ -204,6 +245,7 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | `glab securefile get` | Get secure file details |
 | `glab securefile list` | List secure files |
 | `glab securefile remove` | Delete a secure file |
+| `glab securefile update` | Update a secure file |
 
 ## glab opentofu
 
@@ -226,6 +268,8 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | `glab cluster agent list` | List agents in a project |
 | `glab cluster agent token list` | List tokens for an agent |
 | `glab cluster agent token revoke` | Revoke an agent token |
+| `glab cluster agent token-cache list` | List cached agent tokens |
+| `glab cluster agent token-cache clear` | Clear cached agent tokens |
 | `glab cluster agent update-kubeconfig` | Update kubeconfig for agent access |
 | `glab cluster graph` * | Query Kubernetes object graph via agent |
 
@@ -314,8 +358,49 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 
 | Command | Description |
 |---------|-------------|
-| `glab duo ask` | Generate Git commands from natural language |
-| `glab duo cli` * | Run the GitLab Duo CLI agent |
+| `glab duo cli` | Run the GitLab Duo CLI agent |
+
+## glab orbit *
+
+| Command | Description |
+|---------|-------------|
+| `glab orbit setup` * | Guided setup: verify access, install skill, install local CLI |
+| `glab orbit local` * | Run the Orbit local CLI (downloads binary on first use) |
+| `glab orbit remote status` * | Show GitLab Knowledge Graph cluster health |
+| `glab orbit remote schema` * | Show the Knowledge Graph ontology |
+| `glab orbit remote dsl` * | Show the query DSL JSON Schema |
+| `glab orbit remote query` * | Execute a Knowledge Graph query |
+| `glab orbit remote graph-status` * | Show indexing progress for a namespace or project |
+| `glab orbit remote tools` * | Show the Knowledge Graph MCP tool manifest |
+
+## glab search (beta)
+
+| Command | Description |
+|---------|-------------|
+| `glab search semantic` | Search project code using natural language |
+
+## glab security *
+
+| Command | Description |
+|---------|-------------|
+| `glab security config enable` * | Enable a security scan profile for a project |
+| `glab security config disable` * | Disable a security scan profile for a project |
+| `glab security config status` * | Show the status of a security scan profile |
+
+## glab skills *
+
+| Command | Description |
+|---------|-------------|
+| `glab skills install` * | Install glab's bundled agent skills |
+| `glab skills list` * | List the available bundled agent skills |
+| `glab skills update` * | Update installed agent skills |
+
+## glab todo
+
+| Command | Description |
+|---------|-------------|
+| `glab todo list` | List your to-do items |
+| `glab todo done` | Mark a to-do item as done |
 
 ## glab mcp *
 
@@ -330,6 +415,7 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | `glab stack amend` * | Add changes to the current stacked diff |
 | `glab stack create` * | Create a new stack |
 | `glab stack first` * | Move to the first diff in the stack |
+| `glab stack infer` * | Add layers to a stack based on a range of commits |
 | `glab stack last` * | Move to the last diff in the stack |
 | `glab stack list` * | List all entries in the stack |
 | `glab stack move` * | Move to any selected stack entry |

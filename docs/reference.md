@@ -24,6 +24,8 @@ Global repo flag: `-R / --repo` accepts `OWNER/REPO`, `GROUP/NAMESPACE/REPO`, fu
   - [glab snippet](#glab-snippet)
   - [glab variable](#glab-variable)
   - [glab work-items](#glab-work-items-experimental)
+  - [glab container-registry](#glab-container-registry)
+  - [glab packages](#glab-packages)
 - [CI/CD infrastructure](#cicd-infrastructure)
   - [glab runner](#glab-runner)
   - [glab runner-controller](#glab-runner-controller-experimental)
@@ -43,11 +45,18 @@ Global repo flag: `-R / --repo` accepts `OWNER/REPO`, `GROUP/NAMESPACE/REPO`, fu
   - [glab api](#glab-api)
   - [glab changelog](#glab-changelog)
   - [glab duo](#glab-duo)
+  - [glab orbit](#glab-orbit-experimental)
+  - [glab search](#glab-search-beta)
+  - [glab security](#glab-security-experimental)
+  - [glab skills](#glab-skills-experimental)
+  - [glab todo](#glab-todo)
   - [glab mcp](#glab-mcp-experimental)
   - [glab stack](#glab-stack-experimental)
   - [glab attestation](#glab-attestation-experimental)
   - [glab completion](#glab-completion)
   - [glab check-update](#glab-check-update)
+  - [glab version](#glab-version)
+  - [glab whatsnew](#glab-whatsnew)
 
 ---
 
@@ -520,7 +529,9 @@ Work with GitLab repositories and projects.
 | `members add` | `glab repo members add` | Add a member to the project. |
 | `members remove` | `glab repo members remove` | Remove a member from the project. |
 | `mirror` | `glab repo mirror [ID \| URL \| PATH]` | Configure pull or push mirroring. |
+| `prune` | `glab repo prune` | Delete local Git branches whose MR has been merged. |
 | `publish catalog` | `glab repo publish catalog <tag-name>` | Publish CI/CD components to catalog. (EXPERIMENTAL) |
+| `remote add` | `glab repo remote add <namespace/project>` | Add a Git remote for a GitLab project. |
 | `search` | `glab repo search` | Search repositories by name. |
 | `transfer` | `glab repo transfer [repo]` | Transfer repository to a new namespace. |
 | `update` | `glab repo update [path]` | Update project settings. |
@@ -840,6 +851,7 @@ Manage CI/CD variables for a project or group.
 | `delete` | `glab variable delete <key>` | Delete a variable. |
 | `export` | `glab variable export` | Export all variables. |
 | `get` | `glab variable get <key>` | Get a variable value. |
+| `import` | `glab variable import` | Import variables from a JSON file or standard input. |
 | `list` | `glab variable list` | List all variables. |
 | `set` | `glab variable set <key> <value>` | Create a new variable. |
 | `update` | `glab variable update <key> <value>` | Update an existing variable. |
@@ -884,7 +896,10 @@ Manage GitLab work items (epics, issues, tasks, incidents, test cases).
 
 | Subcommand | Usage | Description |
 |---|---|---|
+| `create` | `glab work-items create` | Create work items in a project or group. (EXPERIMENTAL) |
+| `delete` | `glab work-items delete <iid>` | Delete a work item in a project or group. (EXPERIMENTAL) |
 | `list` | `glab work-items list` | List work items in a project or group. |
+| `update` | `glab work-items update <iid>` | Update work items in a project or group. (EXPERIMENTAL) |
 
 ### glab work-items list flags
 
@@ -896,6 +911,36 @@ Manage GitLab work items (epics, issues, tasks, incidents, test cases).
 | `--per-page` | `-P` | Items per page (max 100, default: 20). |
 | `--after` | | Cursor for pagination (from previous output). |
 | `--output` | `-F` | Format: `text`, `json`. |
+
+---
+
+## glab container-registry
+
+List and manage GitLab container registry repositories and tags.
+
+| Subcommand | Usage | Description |
+|---|---|---|
+| `repository list` | `glab container-registry repository list` | List container registry repositories. |
+| `repository view` | `glab container-registry repository view <repository-id>` | View a container registry repository. |
+| `repository delete` | `glab container-registry repository delete <repository-id>` | Delete a container registry repository. |
+| `tag list` | `glab container-registry tag list <repository-id>` | List tags for a repository. |
+| `tag view` | `glab container-registry tag view <repository-id> <tag-name>` | View a container registry tag. |
+| `tag delete` | `glab container-registry tag delete <repository-id> [<tag-name>]` | Delete container registry tags. |
+
+---
+
+## glab packages
+
+Upload, download, list, and delete packages in a project's package registry.
+
+`list` and `delete` operate on packages of any type. `upload` and `download` are limited to generic packages, identified by a package name, version, and file name.
+
+| Subcommand | Usage | Description |
+|---|---|---|
+| `list` | `glab packages list` | List packages in a project's package registry. |
+| `download` | `glab packages download --name <package> --version <version> --filename <file>` | Download a file from the package registry. |
+| `upload` | `glab packages upload <file> --name <package> --version <version>` | Upload a file to the package registry. |
+| `delete` | `glab packages delete <id>` | Delete a package from the package registry. |
 
 ---
 
@@ -911,7 +956,9 @@ Manage GitLab CI/CD runners.
 |---|---|---|
 | `assign` | `glab runner assign <runner-id>` | Assign a runner to a project. Requires Maintainer or Owner. |
 | `delete` | `glab runner delete <runner-id>` | Permanently delete a runner. |
+| `jobs` | `glab runner jobs <runner-id>` | List jobs processed by a runner. |
 | `list` | `glab runner list` | List runners for a project, group, or instance. |
+| `managers` | `glab runner managers <runner-id>` | List runner managers. |
 | `unassign` | `glab runner unassign <runner-id>` | Unassign a runner from a project. |
 | `update` | `glab runner update <runner-id>` | Update runner settings (pause/unpause). |
 
@@ -948,6 +995,7 @@ Manage runner controllers. Administrator-only.
 |---|---|---|
 | `create` | `glab runner-controller create` | Create a runner controller. (EXPERIMENTAL) |
 | `delete` | `glab runner-controller delete <id>` | Delete a runner controller. (EXPERIMENTAL) |
+| `get` | `glab runner-controller get <controller-id>` | Get details of a runner controller. (EXPERIMENTAL) |
 | `list` | `glab runner-controller list` | List runner controllers. (EXPERIMENTAL) |
 | `scope` | `glab runner-controller scope` | Manage runner controller scopes. (EXPERIMENTAL) |
 | `token` | `glab runner-controller token` | Manage runner controller tokens. (EXPERIMENTAL) |
@@ -966,6 +1014,7 @@ Manage secure files for a project. Files are stored outside version control and 
 | `get` | `glab securefile get <fileID>` | Get secure file details. (GitLab 18.0+) Alias: `show`. |
 | `list` | `glab securefile list` | List secure files. Alias: `ls`. |
 | `remove` | `glab securefile remove <fileID>` | Delete a secure file. Aliases: `rm`, `delete`. |
+| `update` | `glab securefile update <name> <path>` | Update a secure file in a project. |
 
 ### glab securefile download flags
 
@@ -1018,6 +1067,8 @@ Manage GitLab Agents for Kubernetes and clusters.
 | `agent list` | `glab cluster agent list` | List agents in a project. |
 | `agent token list` | `glab cluster agent token list <agent-id>` | List tokens for an agent. |
 | `agent token revoke` | `glab cluster agent token revoke <agent-id> <token-id>` | Revoke an agent token. |
+| `agent token-cache list` | `glab cluster agent token-cache list` | List cached agent tokens (keyring/filesystem). |
+| `agent token-cache clear` | `glab cluster agent token-cache clear` | Clear cached agent tokens. |
 | `agent update-kubeconfig` | `glab cluster agent update-kubeconfig` | Update kubeconfig for agent access. |
 | `graph` | `glab cluster graph` | Query Kubernetes object graph via the agent. (EXPERIMENTAL) |
 
@@ -1106,19 +1157,30 @@ Manage glab settings.
 | `get` | `glab config get <key>` | Print a configuration value. |
 | `set` | `glab config set <key> <value>` | Set a configuration value. |
 
-Config is stored in `~/.config/glab-cli/config.yml` (global) or `.git/glab-cli/config.yml` (local).
+Config file locations follow the XDG Base Directory specification (see `glab config --help` for the full search order and platform-specific paths).
 
 Available configuration keys:
 
 | Key | Description |
 |---|---|
+| `branch_prefix` | Prefix used by `glab stack` when naming generated branches (default: `$USER`, falling back to `glab-stack`). |
 | `browser` | Default browser. Override with `$BROWSER`. |
 | `check_update` | Notify of new versions (default: `true`). Override with `$GLAB_CHECK_UPDATE`. |
-| `display_hyperlinks` | Output hyperlinks in issue/MR lists (default: `false`). |
+| `display_hyperlinks` | Disable hyperlinks in terminal output if `false` (default: `true`). Override with `$FORCE_HYPERLINKS`. |
+| `duo_cli_auto_download` | Automatically download the Duo CLI binary without prompting. |
+| `duo_cli_auto_run` | Automatically run GitLab Duo CLI without prompting. |
 | `editor` | Default editor. Override with `$EDITOR`. |
+| `git_protocol` | Protocol for Git operations: `ssh` or `https` (default: `ssh`). |
 | `glab_pager` | Pager command, e.g. `less -R`. |
 | `glamour_style` | Markdown renderer style: `dark`, `light`, `notty`, or a custom glamour style. |
 | `host` | Default GitLab host (default: `https://gitlab.com`). |
+| `no_prompt` | Disable interactive prompts if `true` (default: `false`). Override with `$NO_PROMPT`. |
+| `notify_skill_updates` | Show a notice when an installed agent skill has updates available (default: `true`). Override with `$GLAB_NOTIFY_SKILL_UPDATES`. |
+| `orbit_local_auto_download` | Automatically download the Orbit local CLI binary without prompting. |
+| `orbit_local_auto_run` | Automatically run Orbit local CLI without prompting. |
+| `remote_alias` | Name of the `git remote` pointing at the GitLab repository, used when multiple remotes are configured. |
+| `show_whats_new` | Show a one-time post-upgrade banner pointing at `glab whatsnew` (default: `true`). Override with `$GLAB_SHOW_WHATS_NEW`. |
+| `telemetry` | Disable sending usage data to your GitLab instance if `false` (default: `true`). Override with `$GLAB_SEND_TELEMETRY`. |
 | `token` | GitLab access token (prefer env vars). |
 | `visual` | Takes precedence over `editor`. Override with `$VISUAL`. |
 
@@ -1353,22 +1415,91 @@ Work with GitLab Duo AI assistant.
 
 | Subcommand | Usage | Description |
 |---|---|---|
-| `ask` | `glab duo ask <prompt>` | Generate Git commands from natural language using AI. |
-| `cli` | `glab duo cli` | Run the GitLab Duo CLI agent. (EXPERIMENTAL, requires separate binary download) |
+| `cli` | `glab duo cli [command]` | Run the GitLab Duo CLI (GitLab Duo Agent Platform in your terminal). Requires GitLab 19.2+. Downloads a separate binary on first use. |
 
-### glab duo ask flags
+### glab duo cli flags
 
-| Flag | Description |
-|---|---|
-| `--git` | Ask about Git (default: `true`). |
+| Flag | Short | Description |
+|---|---|---|
+| `--install` | | Install the GitLab Duo CLI binary without running it. |
+| `--update` | | Check for and install updates to the binary. |
+| `--yes` | `-y` | Skip confirmation prompts. |
 
-`glab duo ask` suggests Git commands for natural language prompts and lets you execute them with confirmation.
+All other arguments and flags are passed through to the GitLab Duo CLI binary. `glab` handles authentication automatically. Config keys `duo_cli_auto_run` and `duo_cli_auto_download` skip the run/download confirmation prompts.
+
+Note: `glab duo ask` was removed; use `glab duo cli` instead.
+
+---
+
+## glab orbit (EXPERIMENTAL)
+
+Access the GitLab Knowledge Graph (product name: Orbit) from the CLI.
+
+| Subcommand | Usage | Description |
+|---|---|---|
+| `setup` | `glab orbit setup` | Guided setup: verify access, install the skill, install the local CLI. (EXPERIMENTAL) |
+| `local` | `glab orbit local [command]` | Run the Orbit local CLI (downloads the binary on first use). (EXPERIMENTAL) |
+| `remote status` | `glab orbit remote status` | Show GitLab Knowledge Graph cluster health. (EXPERIMENTAL) |
+| `remote schema` | `glab orbit remote schema [node...]` | Show the Knowledge Graph ontology. (EXPERIMENTAL) |
+| `remote dsl` | `glab orbit remote dsl` | Show the query DSL JSON Schema. (EXPERIMENTAL) |
+| `remote query` | `glab orbit remote query <file\|->` | Execute a Knowledge Graph query. (EXPERIMENTAL) |
+| `remote graph-status` | `glab orbit remote graph-status --full-path <path>` | Show indexing progress for a namespace or project. (EXPERIMENTAL) |
+| `remote tools` | `glab orbit remote tools` | Show the Knowledge Graph MCP tool manifest. (EXPERIMENTAL) |
+
+Exit codes for `orbit remote`: `1` generic error, `2` endpoint unavailable (feature flag off), `3` not authenticated, `4` access denied, `5` rate limited.
+
+---
+
+## glab search (BETA)
+
+Search a GitLab project for code and other resources.
+
+| Subcommand | Usage | Description |
+|---|---|---|
+| `semantic` | `glab search semantic` | Search project code using natural language (AI-powered). |
+
+---
+
+## glab security (EXPERIMENTAL)
+
+Enable, disable, or inspect security scan profiles for a project (SAST, secret detection, dependency scanning, container scanning, etc.).
+
+| Subcommand | Usage | Description |
+|---|---|---|
+| `config enable` | `glab security config enable <profile>` | Enable a security scan profile for a project. (EXPERIMENTAL) |
+| `config disable` | `glab security config disable <profile>` | Disable a security scan profile for a project. (EXPERIMENTAL) |
+| `config status` | `glab security config status <profile>` | Show the status of a security scan profile. (EXPERIMENTAL) |
+
+---
+
+## glab skills (EXPERIMENTAL)
+
+Install and manage glab's bundled agent skills, following the Agent Skills specification. Works with GitLab Duo Agent Platform, Claude Code, Codex, and Gemini CLI.
+
+| Subcommand | Usage | Description |
+|---|---|---|
+| `install` | `glab skills install [name]` | Install glab's bundled agent skills. (EXPERIMENTAL) |
+| `list` | `glab skills list` | List the available bundled agent skills. (EXPERIMENTAL) |
+| `update` | `glab skills update [name]` | Update installed agent skills to the current shipped version. (EXPERIMENTAL) |
+
+Config key `notify_skill_updates` (default: `true`) shows a notice when an installed skill has updates available.
+
+---
+
+## glab todo
+
+Manage your to-do list: items that need your attention, such as issues and merge requests where you were assigned, mentioned, or asked to review.
+
+| Subcommand | Usage | Description |
+|---|---|---|
+| `list` | `glab todo list` | List your to-do items. |
+| `done` | `glab todo done [<id>]` | Mark a to-do item as done. Use `--all` to mark every item done. |
 
 Examples:
 ```sh
-glab duo ask "list last 10 commit titles"
-glab duo ask "how do I undo my last commit"
-glab duo ask "show files changed in the last commit"
+glab todo list
+glab todo done 123
+glab todo done --all
 ```
 
 ---
@@ -1407,6 +1538,7 @@ Create and manage stacked diffs. Each stack entry creates a separate MR. Metadat
 | `amend` | `glab stack amend [files]` | Add more changes to the current stacked diff. (EXPERIMENTAL) |
 | `create` | `glab stack create <name>` | Create a new stack. (EXPERIMENTAL) |
 | `first` | `glab stack first` | Move to the first diff in the stack. (EXPERIMENTAL) |
+| `infer` | `glab stack infer <revision-range>` | Add layers to a stack based on a range of commits. (EXPERIMENTAL) |
 | `last` | `glab stack last` | Move to the last diff in the stack. (EXPERIMENTAL) |
 | `list` | `glab stack list` | List all entries in the stack. (EXPERIMENTAL) |
 | `move` | `glab stack move` | Move to any selected entry in the stack. (EXPERIMENTAL) |
@@ -1473,5 +1605,40 @@ Check for the latest glab release.
 glab check-update
 ```
 
-No flags. Compares the current version against the latest GitHub release.
+No flags. Compares the current version against the latest GitHub release. Alias: `glab update`.
+
+---
+
+## glab version
+
+Print the installed glab version and the commit it was built from.
+
+```
+glab version
+```
+
+Include this output when reporting a bug.
+
+---
+
+## glab whatsnew
+
+Show release notes for glab versions.
+
+| Flag | Description |
+|---|---|
+| `--latest` | Show release notes for the latest published release only. |
+| `--since` | Show release notes for every release newer than the given version. |
+
+With no arguments, shows release notes for every release published since the last time `whatsnew` ran or the post-upgrade banner was seen, capped at the 10 most recent releases. Pass a version argument to view notes for a specific release.
+
+Examples:
+```sh
+glab whatsnew
+glab whatsnew --latest
+glab whatsnew v1.85.0
+glab whatsnew --since v1.80.0
+```
+
+Config key `show_whats_new` (default: `true`) controls the one-time post-upgrade banner pointing at this command.
 
