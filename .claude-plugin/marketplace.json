@@ -1,5 +1,5 @@
 {
-  "name": "glab",
+  "name": "glab-skills",
   "description": "Claude Code skills and hooks for working with GitLab via the glab CLI",
   "owner": {
     "name": "moumine9",
@@ -7,7 +7,7 @@
   },
   "plugins": [
     {
-      "name": "glab",
+      "name": "glab-skills",
       "description": "Claude Code skills and hooks for GitLab — manage MRs, issues, and CI pipelines via the glab CLI without leaving your terminal",
       "author": {
         "name": "moumine9",
@@ -15,7 +15,7 @@
       },
       "category": "development",
       "source": "./",
-      "homepage": "https://github.com/moumine9/glab",
+      "homepage": "https://github.com/moumine9/glab-skills",
       "keywords": ["gitlab", "glab", "cli", "merge-request", "issues", "ci", "claude-code"]
     }
   ]

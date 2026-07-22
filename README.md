@@ -1,4 +1,4 @@
-# glab
+# glab-skills
 
 Claude Code skills and hooks for working with GitLab via the `glab` CLI.
 
@@ -72,8 +72,8 @@ The `glab-auth-guard.sh` hook runs after every Bash tool call. When it detects a
 Run these three commands inside any Claude Code session:
 
 ```
-/plugin marketplace add moumine9/glab
-/plugin install glab
+/plugin marketplace add moumine9/glab-skills
+/plugin install glab-skills
 /reload-plugins
 ```
 
@@ -81,10 +81,10 @@ Pick a scope when prompted. User is the one you want most of the time — it's a
 
 Skills are available as:
 
-- `/glab:auth`
-- `/glab:mr`
-- `/glab:issue`
-- `/glab:ci`
+- `/glab-skills:auth`
+- `/glab-skills:mr`
+- `/glab-skills:issue`
+- `/glab-skills:ci`
 
 The auth guard hook activates automatically once the plugin is installed.
 
@@ -160,10 +160,10 @@ cp .claude/settings.local.json <your-project>/.claude/settings.local.json
 
 | Skill | Plugin trigger | Standalone trigger | Description | Auto-invoked |
 |-------|---------------|--------------------|-------------|-------------|
-| auth | `/glab:auth` | `/auth` | Auth flows, Docker credentials, tokens, and key management | No |
-| mr | `/glab:mr` | `/mr` | Full MR lifecycle: create, review, merge, and stacked diffs | No |
-| issue | `/glab:issue` | `/issue` | Create, manage, board view, and track issues | No |
-| ci | `/glab:ci` | `/ci` | Pipelines, jobs, schedules, runners, and CI variables | No |
+| auth | `/glab-skills:auth` | `/auth` | Auth flows, Docker credentials, tokens, and key management | No |
+| mr | `/glab-skills:mr` | `/mr` | Full MR lifecycle: create, review, merge, and stacked diffs | No |
+| issue | `/glab-skills:issue` | `/issue` | Create, manage, board view, and track issues | No |
+| ci | `/glab-skills:ci` | `/ci` | Pipelines, jobs, schedules, runners, and CI variables | No |
 
 Skills with `disable-model-invocation: true` require explicit invocation. Claude will not trigger them automatically.
 
