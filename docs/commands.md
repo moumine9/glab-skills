@@ -137,6 +137,13 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | `glab packages upload` | Upload a file to the package registry |
 | `glab packages delete` | Delete a package from the package registry |
 
+## glab artifact-registry *
+
+| Command | Description |
+|---------|-------------|
+| `glab artifact-registry get-token` * | Get a short-lived access token for the GitLab Artifact Registry |
+| `glab artifact-registry status` * | Check your access to the GitLab Artifact Registry |
+
 ## glab incident
 
 | Command | Description |
@@ -272,6 +279,13 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | `glab cluster agent token-cache clear` | Clear cached agent tokens |
 | `glab cluster agent update-kubeconfig` | Update kubeconfig for agent access |
 | `glab cluster graph` * | Query Kubernetes object graph via agent |
+
+## glab dependency-firewall (df) (beta)
+
+| Command | Description |
+|---------|-------------|
+| `glab dependency-firewall configure` | Write registry URLs for a package manager to `.gitlab/df/config.json` |
+| `glab dependency-firewall ci-summary` | Summarize blocked/flagged packages from the CI log |
 
 ## glab auth
 

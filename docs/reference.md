@@ -26,12 +26,14 @@ Global repo flag: `-R / --repo` accepts `OWNER/REPO`, `GROUP/NAMESPACE/REPO`, fu
   - [glab work-items](#glab-work-items-experimental)
   - [glab container-registry](#glab-container-registry)
   - [glab packages](#glab-packages)
+  - [glab artifact-registry](#glab-artifact-registry-experimental)
 - [CI/CD infrastructure](#cicd-infrastructure)
   - [glab runner](#glab-runner)
   - [glab runner-controller](#glab-runner-controller-experimental)
   - [glab securefile](#glab-securefile)
   - [glab opentofu](#glab-opentofu)
   - [glab cluster](#glab-cluster)
+  - [glab dependency-firewall](#glab-dependency-firewall-beta)
 - [Account management](#account-management)
   - [glab auth](#glab-auth)
   - [glab config](#glab-config)
@@ -944,6 +946,21 @@ Upload, download, list, and delete packages in a project's package registry.
 
 ---
 
+## glab artifact-registry (EXPERIMENTAL)
+
+Exchange a GitLab credential for a short-lived GitLab Artifact Registry access token, either to check your access or to hand the token to a caller (for example, `docker login`).
+
+Requires a GitLab Enterprise Edition (EE) instance on GitLab 19.1+ with token exchange enabled (the `gate_token_exchange_endpoint` feature flag).
+
+| Subcommand | Usage | Description |
+|---|---|---|
+| `get-token` | `glab artifact-registry get-token [--duration <dur>] [--hostname <host>]` | Get a short-lived access token for the GitLab Artifact Registry. Prints the bare token to stdout. (EXPERIMENTAL) |
+| `status` | `glab artifact-registry status [--hostname <host>]` | Check your access to the GitLab Artifact Registry; prints issuer, subject, audience, and expiry. (EXPERIMENTAL) |
+
+Both subcommands support `-F/--output text\|json` and `--jq` for filtering JSON output.
+
+---
+
 ## CI/CD infrastructure
 
 ---
@@ -1092,6 +1109,19 @@ Manage GitLab Agents for Kubernetes and clusters.
 | `--use-context` | `-u` | Set as default context. |
 | `--cache-mode` | `-c` | Token cache mode: `keyring-filesystem-fallback`, `force-keyring`, `force-filesystem`, `no`. |
 | `--token-expiry-duration` | | Token validity duration (minimum: 1 day). |
+
+---
+
+## glab dependency-firewall (BETA)
+
+Configure GitLab Dependency Firewall for local package managers, and summarize blocked or flagged packages from a CI run. Aliased as `glab df`.
+
+| Subcommand | Usage | Description |
+|---|---|---|
+| `configure` | `glab dependency-firewall configure <package-manager> [--repo-resolve <url>] [--repo-deploy <url>]` | Write a package manager's resolve/deploy registry URLs to `.gitlab/df/config.json`. Supported: `npm`. (BETA) |
+| `ci-summary` | `glab dependency-firewall ci-summary` | Read `.gitlab/df/ci-log.json` in the current directory and print blocked/flagged packages from the last run. (BETA) |
+
+Exit codes for `ci-summary`: `0` no blocked entries, `1` log could not be read, `3` at least one entry blocked.
 
 ---
 
