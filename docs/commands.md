@@ -19,7 +19,13 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | `glab mr issues` | List issues related to an MR |
 | `glab mr list` | List MRs |
 | `glab mr merge` | Merge an MR |
-| `glab mr note` | Add a comment or resolve a discussion |
+| `glab mr note create` * | Create a comment or discussion (supports `--draft`, `--internal`) |
+| `glab mr note delete` * | Delete a note |
+| `glab mr note list` * | List MR discussions |
+| `glab mr note publish` * | Publish all your pending review comments |
+| `glab mr note reopen` * | Reopen a discussion |
+| `glab mr note resolve` * | Resolve a discussion |
+| `glab mr note update` * | Update the body of a note |
 | `glab mr rebase` | Rebase source branch against target |
 | `glab mr reopen` | Reopen a closed MR |
 | `glab mr revoke` | Revoke your approval |
@@ -142,6 +148,7 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | Command | Description |
 |---------|-------------|
 | `glab artifact-registry get-token` * | Get a short-lived access token for the GitLab Artifact Registry |
+| `glab artifact-registry login` * | Authenticate a package manager (Docker, Maven, Gradle, npm, sbt) against the GitLab Artifact Registry |
 | `glab artifact-registry status` * | Check your access to the GitLab Artifact Registry |
 
 ## glab incident
@@ -239,8 +246,13 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | `glab runner-controller delete` * | Delete a runner controller |
 | `glab runner-controller get` * | Get details of a runner controller |
 | `glab runner-controller list` * | List runner controllers |
-| `glab runner-controller scope` * | Manage runner controller scopes |
-| `glab runner-controller token` * | Manage runner controller tokens |
+| `glab runner-controller scope create` * | Create a scope for a runner controller |
+| `glab runner-controller scope delete` * | Delete a scope from a runner controller |
+| `glab runner-controller scope list` * | List scopes for a runner controller |
+| `glab runner-controller token create` * | Create a token for a runner controller |
+| `glab runner-controller token list` * | List tokens for a runner controller |
+| `glab runner-controller token revoke` * | Revoke a runner controller token |
+| `glab runner-controller token rotate` * | Rotate a runner controller token |
 | `glab runner-controller update` * | Update a runner controller |
 
 ## glab securefile
@@ -270,7 +282,7 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | Command | Description |
 |---------|-------------|
 | `glab cluster agent bootstrap` | Bootstrap a Kubernetes agent |
-| `glab cluster agent check_manifest_usage` * | Check agent configs for manifest usage |
+| `glab cluster agent check-manifest-usage` * | Check agent configs for manifest usage |
 | `glab cluster agent get-token` | Create a PAT to authenticate with an agent |
 | `glab cluster agent list` | List agents in a project |
 | `glab cluster agent token list` | List tokens for an agent |
@@ -280,12 +292,24 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | `glab cluster agent update-kubeconfig` | Update kubeconfig for agent access |
 | `glab cluster graph` * | Query Kubernetes object graph via agent |
 
-## glab dependency-firewall (df) (beta)
+## glab dependency-firewall (df) *
 
 | Command | Description |
 |---------|-------------|
-| `glab dependency-firewall configure` | Write registry URLs for a package manager to `.gitlab/df/config.json` |
-| `glab dependency-firewall ci-summary` | Summarize blocked/flagged packages from the CI log |
+| `glab dependency-firewall bundle` * | Run Bundler through the Dependency Firewall |
+| `glab dependency-firewall ci-summary` * | Summarize blocked/flagged packages from the CI log |
+| `glab dependency-firewall gem` * | Run gem through the Dependency Firewall |
+| `glab dependency-firewall gradle` * | Run Gradle through the Dependency Firewall |
+| `glab dependency-firewall maven` * | Run Maven through the Dependency Firewall |
+| `glab dependency-firewall npm` * | Run npm through the Dependency Firewall |
+| `glab dependency-firewall package` * | Check a single package URL (PURL) against the firewall policy |
+| `glab dependency-firewall pip` * | Run pip through the Dependency Firewall |
+| `glab dependency-firewall pipenv` * | Run Pipenv through the Dependency Firewall |
+| `glab dependency-firewall pnpm` * | Run pnpm through the Dependency Firewall |
+| `glab dependency-firewall poetry` * | Run Poetry through the Dependency Firewall |
+| `glab dependency-firewall twine` * | Run Twine through the Dependency Firewall |
+| `glab dependency-firewall uv` * | Run uv through the Dependency Firewall |
+| `glab dependency-firewall yarn` * | Run Yarn through the Dependency Firewall |
 
 ## glab auth
 
@@ -304,6 +328,7 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 |---------|-------------|
 | `glab config edit` | Open config file in default editor |
 | `glab config get` | Print a configuration value |
+| `glab config path` | Print the location of the global config file |
 | `glab config set` | Set a configuration value |
 
 ## glab token
@@ -378,14 +403,15 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 
 | Command | Description |
 |---------|-------------|
-| `glab orbit setup` * | Guided setup: verify access, install skill, install local CLI |
-| `glab orbit local` * | Run the Orbit local CLI (downloads binary on first use) |
-| `glab orbit remote status` * | Show GitLab Knowledge Graph cluster health |
-| `glab orbit remote schema` * | Show the Knowledge Graph ontology |
-| `glab orbit remote dsl` * | Show the query DSL JSON Schema |
-| `glab orbit remote query` * | Execute a Knowledge Graph query |
-| `glab orbit remote graph-status` * | Show indexing progress for a namespace or project |
-| `glab orbit remote tools` * | Show the Knowledge Graph MCP tool manifest |
+| `glab orbit` * | Run the Orbit CLI (every command and flag is forwarded to the managed Orbit binary) |
+
+## glab govern *
+
+| Command | Description |
+|---------|-------------|
+| `glab govern audit sync` * | Sync AI agent session data to GitLab as audit events |
+| `glab govern doctor` * | Diagnose AI agent governance configuration, authentication, and hook setup |
+| `glab govern setup` * | Configure this machine to record AI agent sessions |
 
 ## glab search (beta)
 
@@ -405,6 +431,7 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 
 | Command | Description |
 |---------|-------------|
+| `glab skills get` * | Print a bundled agent skill file without installing it |
 | `glab skills install` * | Install glab's bundled agent skills |
 | `glab skills list` * | List the available bundled agent skills |
 | `glab skills update` * | Update installed agent skills |
@@ -428,6 +455,7 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 |---------|-------------|
 | `glab stack amend` * | Add changes to the current stacked diff |
 | `glab stack create` * | Create a new stack |
+| `glab stack delete` * | Delete a stack's local metadata |
 | `glab stack first` * | Move to the first diff in the stack |
 | `glab stack infer` * | Add layers to a stack based on a range of commits |
 | `glab stack last` * | Move to the last diff in the stack |
