@@ -36,7 +36,12 @@ This shows the authenticated user and GitLab host. If it prints "You are not log
 glab auth login
 ```
 
-Follow the prompts. The CLI will open a browser and wait for the OAuth callback. Once done, it stores the token locally.
+Follow the prompts. The CLI will open a browser and wait for the OAuth callback. Once done, it stores the token in the OS keyring when one is available, otherwise as plaintext in the config file (`glab config path` prints its location).
+
+Useful flags:
+- `--web` — skip the login type prompt and go straight to browser/OAuth login
+- `--device` — OAuth device flow for headless machines: prints a one-time code and URL to open on any device (GitLab 17.9+)
+- `--insecure-storage` — store the token as plaintext in the config file instead of the keyring
 
 #### Login with a personal access token
 
@@ -57,6 +62,8 @@ Select "Paste an authentication token" when prompted. Tokens are created at **Gi
 ```bash
 glab auth login --hostname gitlab.example.com
 ```
+
+OAuth on a self-managed instance needs an OAuth application client ID; the interactive login walks through the setup. A personal access token avoids that step.
 
 #### Logout
 

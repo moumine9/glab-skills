@@ -33,7 +33,7 @@ Global repo flag: `-R / --repo` accepts `OWNER/REPO`, `GROUP/NAMESPACE/REPO`, fu
   - [glab securefile](#glab-securefile)
   - [glab opentofu](#glab-opentofu)
   - [glab cluster](#glab-cluster)
-  - [glab dependency-firewall](#glab-dependency-firewall-beta)
+  - [glab dependency-firewall](#glab-dependency-firewall-experimental)
 - [Account management](#account-management)
   - [glab auth](#glab-auth)
   - [glab config](#glab-config)
@@ -48,6 +48,7 @@ Global repo flag: `-R / --repo` accepts `OWNER/REPO`, `GROUP/NAMESPACE/REPO`, fu
   - [glab changelog](#glab-changelog)
   - [glab duo](#glab-duo)
   - [glab orbit](#glab-orbit-experimental)
+  - [glab govern](#glab-govern-experimental)
   - [glab search](#glab-search-beta)
   - [glab security](#glab-security-experimental)
   - [glab skills](#glab-skills-experimental)
@@ -83,7 +84,7 @@ Create, view, and manage merge requests.
 | `issues` | `glab mr issues [<id> \| <branch>]` | List issues related to an MR. |
 | `list` | `glab mr list` | List MRs. |
 | `merge` | `glab mr merge {<id> \| <branch>}` | Merge (accept) an MR. |
-| `note` | `glab mr note [<id> \| <branch>]` | Add a comment or resolve/unresolve a discussion. |
+| `note` | `glab mr note <command> [<id> \| <branch>]` | Create, list, update, delete, resolve, and publish comments (has subcommands). |
 | `rebase` | `glab mr rebase [<id> \| <branch>]` | Rebase source branch against target. |
 | `reopen` | `glab mr reopen [<id>... \| <branch>...]` | Reopen a closed MR. |
 | `revoke` | `glab mr revoke [<id> \| <branch>]` | Revoke your approval. |
@@ -99,6 +100,8 @@ Create, view, and manage merge requests.
 |---|---|---|
 | `--title` | `-t` | MR title. |
 | `--description` | `-d` | Description. Set to `-` to open editor. |
+| `--description-file` | | Read the description from a file (`-` for stdin). |
+| `--attach` | | Upload a file and reference it at the end of the description (`-` for stdin, repeatable). (EXPERIMENTAL) |
 | `--assignee` | `-a` | Assign by username (comma-separated or repeat flag). |
 | `--reviewer` | | Request review from usernames. |
 | `--label` | `-l` | Add labels. |
@@ -159,6 +162,8 @@ Create, view, and manage merge requests.
 | `--ready` | `-r` | Mark as ready for review. |
 | `--title` | `-t` | New title. |
 | `--description` | `-d` | New description. Set to `-` to open editor. |
+| `--description-file` | | Read the description from a file (`-` for stdin). |
+| `--attach` | | Upload a file and reference it at the end of the description (`-` for stdin, repeatable). (EXPERIMENTAL) |
 | `--assignee` | `-a` | Update assignees (prefix `+` to add, `!`/`-` to remove). |
 | `--reviewer` | | Update reviewers (same prefix rules). |
 | `--label` | `-l` | Add labels. |
@@ -186,14 +191,63 @@ Create, view, and manage merge requests.
 | `--branch` | `-b` | Local branch name to use. |
 | `--set-upstream-to` | `-u` | Set tracking to `[REMOTE/]BRANCH`. |
 
-### glab mr note flags
+### glab mr note subcommands (EXPERIMENTAL)
+
+| Subcommand | Usage | Description |
+|---|---|---|
+| `create` | `glab mr note create [<id> \| <branch>]` | Create a comment or discussion. |
+| `delete` | `glab mr note delete [<id> \| <branch>] <note-id>` | Delete a note. `-y/--yes` skips confirmation. |
+| `list` | `glab mr note list [<id> \| <branch>]` | List discussions. |
+| `publish` | `glab mr note publish [<id> \| <branch>]` | Publish all your pending review comments (created with `--draft`). |
+| `reopen` | `glab mr note reopen [<id> \| <branch>] <discussion-id>` | Reopen a discussion. |
+| `resolve` | `glab mr note resolve [<id> \| <branch>] <discussion-id>` | Resolve a discussion. Accepts a discussion ID, an 8+ character prefix, or a note ID. |
+| `update` | `glab mr note update [<id> \| <branch>] <note-id>` | Update the body of a note (`-m/--message`, `--attach`). |
+
+When both are given, the MR ID comes first (`glab mr note resolve 123 abc12345`); omit it to use the current branch's MR.
+
+### glab mr note create flags
 
 | Flag | Short | Description |
 |---|---|---|
-| `--message` | `-m` | Comment text. |
-| `--resolve` | | Resolve discussion by note ID. |
-| `--unresolve` | | Unresolve discussion by note ID. |
+| `--message` | `-m` | Comment text. If omitted, opens an editor or reads stdin. |
+| `--draft` | | Add the comment to a pending review instead of publishing it. Publish with `glab mr note publish`. |
+| `--internal` | | Create an internal note, visible only to project members. |
+| `--reply` | | Reply to an existing discussion (full discussion ID or a unique prefix of at least 8 characters). |
+| `--file` | | File path for a diff comment on the latest MR diff version. |
+| `--line` | | Line in the new version: a number (`42`) or a range (`10:15`). Requires `--file`. |
+| `--old-line` | | Line in the old version, for a removed line. Requires `--file`. |
+| `--resolvable` | | Create a resolvable thread (default: `true`). Set to `false` for bot or status notes. |
 | `--unique` | | Do not create if identical comment already exists. |
+| `--attach` | | Upload a file and reference it at the end of the comment (`-` for stdin, repeatable). (EXPERIMENTAL) |
+
+Flag rules: `--file`, `--reply`, and `--unique` are mutually exclusive. `--draft` cannot be combined with `--unique` or `--resolvable=false`. `--internal` cannot be combined with `--draft` or `--file`. `--attach` cannot be combined with `--unique`.
+
+### glab mr note publish flags
+
+| Flag | Short | Description |
+|---|---|---|
+| `--message` | `-m` | Summary note to add to the MR when publishing. |
+| `--internal` | | Mark the summary note as internal. Requires `--message`. |
+| `--reviewer-state` | | Set your review state: `requested_changes` or `reviewed`. Does not record an approval. |
+| `--yes` | `-y` | Skip confirmation. Required when not running interactively. |
+
+### glab mr note list flags
+
+| Flag | Short | Description |
+|---|---|---|
+| `--type` | `-t` | Note type: `all`, `general`, `diff`, `system` (default: `all`). |
+| `--state` | | Resolution state: `all`, `resolved`, `unresolved` (default: `all`). |
+| `--file` | | Show only diff notes on this file path. |
+| `--output` | `-F` | Format: `text`, `json`. |
+| `--jq` | | Filter JSON output with a jq expression. |
+
+Examples:
+```sh
+glab mr note create 123 -m "LGTM"
+glab mr note create 123 --draft --file main.go --line 42 -m "Off-by-one?"
+glab mr note publish 123 -m "A few blockers, see the comments." --reviewer-state requested_changes
+glab mr note list 123 --state unresolved
+```
 
 ### glab mr rebase flags
 
@@ -241,6 +295,8 @@ Work with GitLab issues.
 |---|---|---|
 | `--title` | `-t` | Issue title. |
 | `--description` | `-d` | Description. Set to `-` to open editor. |
+| `--description-file` | | Read the description from a file (`-` for stdin). |
+| `--attach` | | Upload a file and reference it at the end of the description (`-` for stdin, repeatable). (EXPERIMENTAL) |
 | `--assignee` | `-a` | Assign by username. |
 | `--label` | `-l` | Add labels. |
 | `--milestone` | `-m` | Assign milestone. |
@@ -285,6 +341,8 @@ Work with GitLab issues.
 |---|---|---|
 | `--title` | `-t` | New title. |
 | `--description` | `-d` | New description. Set to `-` to open editor. |
+| `--description-file` | | Read the description from a file (`-` for stdin). |
+| `--attach` | | Upload a file and reference it at the end of the description (`-` for stdin, repeatable). (EXPERIMENTAL) |
 | `--assignee` | `-a` | Update assignees (prefix `+` to add, `!`/`-` to remove). |
 | `--label` | `-l` | Add labels. |
 | `--unlabel` | `-u` | Remove labels. |
@@ -305,6 +363,15 @@ Work with GitLab issues.
 | `--system-logs` | `-s` | Show system activity logs. |
 | `--output` | `-F` | Format: `text`, `json`. |
 | `--web` | `-w` | Open in browser. |
+
+### glab issue note flags
+
+| Flag | Short | Description |
+|---|---|---|
+| `--message` | `-m` | Comment text. |
+| `--attach` | | Upload a file and reference it at the end of the comment (`-` for stdin, repeatable). (EXPERIMENTAL) |
+
+`glab incident note` takes the same flags.
 
 ---
 
@@ -914,6 +981,8 @@ Manage GitLab work items (epics, issues, tasks, incidents, test cases).
 | `--after` | | Cursor for pagination (from previous output). |
 | `--output` | `-F` | Format: `text`, `json`. |
 
+`glab work-items create` and `glab work-items update` accept `--description-file <file>` (`-` for stdin) and `--attach <file>` (EXPERIMENTAL, repeatable) in addition to `-d/--description`.
+
 ---
 
 ## glab container-registry
@@ -948,16 +1017,33 @@ Upload, download, list, and delete packages in a project's package registry.
 
 ## glab artifact-registry (EXPERIMENTAL)
 
-Exchange a GitLab credential for a short-lived GitLab Artifact Registry access token, either to check your access or to hand the token to a caller (for example, `docker login`).
+Exchange a GitLab credential for a short-lived GitLab Artifact Registry access token, either to check your access, to hand the token to a caller, or to configure a package manager to authenticate against the registry.
 
 Requires a GitLab Enterprise Edition (EE) instance on GitLab 19.1+ with token exchange enabled (the `gate_token_exchange_endpoint` feature flag).
 
 | Subcommand | Usage | Description |
 |---|---|---|
 | `get-token` | `glab artifact-registry get-token [--duration <dur>] [--hostname <host>]` | Get a short-lived access token for the GitLab Artifact Registry. Prints the bare token to stdout. (EXPERIMENTAL) |
+| `login` | `glab artifact-registry login --<package-manager> --registry <registry>` | Configure a package manager to authenticate against the GitLab Artifact Registry. (EXPERIMENTAL) |
 | `status` | `glab artifact-registry status [--hostname <host>]` | Check your access to the GitLab Artifact Registry; prints issuer, subject, audience, and expiry. (EXPERIMENTAL) |
 
-Both subcommands support `-F/--output text\|json` and `--jq` for filtering JSON output.
+`get-token` and `status` support `-F/--output text\|json` and `--jq` for filtering JSON output.
+
+### glab artifact-registry login flags
+
+| Flag | Description |
+|---|---|
+| `--docker` | Register `glab` as a Docker credential helper for the registry. Writes to `$DOCKER_CONFIG`, or `~/.docker`. |
+| `--maven` | Write a `<server>` block to `~/.m2/settings.xml`, keyed by `--registry-alias`. |
+| `--gradle` | Write `{alias}Url`, `{alias}Username`, and `{alias}Password` to `~/.gradle/gradle.properties`. |
+| `--npm` | Write a `//{host}{path}/:_authToken` entry to `~/.npmrc`. |
+| `--sbt` | Write a `credentials +=` line to `~/.sbt/1.0/credentials.sbt`. |
+| `--registry` | Registry to authenticate against. A bare hostname for `--docker`; typically a URL for the others. |
+| `--registry-alias` | Alias/ID to register the registry under (Maven and Gradle only). |
+| `--duration` | How long the exchanged token stays valid (default: `15m`, max: `12h`). Ignored for `--docker`. |
+| `--hostname` | GitLab hostname to request the token from. |
+
+`--docker` exchanges a fresh token on every pull or push. Every other flag writes one token that nothing refreshes, so rerun the command before `--duration` elapses.
 
 ---
 
@@ -1014,8 +1100,13 @@ Manage runner controllers. Administrator-only.
 | `delete` | `glab runner-controller delete <id>` | Delete a runner controller. (EXPERIMENTAL) |
 | `get` | `glab runner-controller get <controller-id>` | Get details of a runner controller. (EXPERIMENTAL) |
 | `list` | `glab runner-controller list` | List runner controllers. (EXPERIMENTAL) |
-| `scope` | `glab runner-controller scope` | Manage runner controller scopes. (EXPERIMENTAL) |
-| `token` | `glab runner-controller token` | Manage runner controller tokens. (EXPERIMENTAL) |
+| `scope create` | `glab runner-controller scope create <controller-id>` | Create a scope (`--instance` or `--runner <id>`). (EXPERIMENTAL) |
+| `scope delete` | `glab runner-controller scope delete <controller-id>` | Delete a scope (`--instance` or `--runner <id>`). (EXPERIMENTAL) |
+| `scope list` | `glab runner-controller scope list <controller-id>` | List scopes for a runner controller. (EXPERIMENTAL) |
+| `token create` | `glab runner-controller token create <controller-id>` | Create a token for a runner controller. (EXPERIMENTAL) |
+| `token list` | `glab runner-controller token list <controller-id>` | List tokens for a runner controller. (EXPERIMENTAL) |
+| `token revoke` | `glab runner-controller token revoke <controller-id> <token-id>` | Revoke a token. (EXPERIMENTAL) |
+| `token rotate` | `glab runner-controller token rotate <controller-id> <token-id>` | Rotate a token. (EXPERIMENTAL) |
 | `update` | `glab runner-controller update <id>` | Update a runner controller. (EXPERIMENTAL) |
 
 ---
@@ -1079,7 +1170,7 @@ Manage GitLab Agents for Kubernetes and clusters.
 | Subcommand | Usage | Description |
 |---|---|---|
 | `agent bootstrap` | `glab cluster agent bootstrap <agent-name>` | Bootstrap a Kubernetes agent (requires `kubectl` and `flux`). |
-| `agent check_manifest_usage` | `glab cluster agent check_manifest_usage` | Check agent configs for built-in GitOps manifest usage. (EXPERIMENTAL) |
+| `agent check-manifest-usage` | `glab cluster agent check-manifest-usage --group <group>` | Check agent configs for the deprecated `gitops.manifest_projects` setting. Renamed from `check_manifest_usage` in glab 1.116.0. (EXPERIMENTAL) |
 | `agent get-token` | `glab cluster agent get-token` | Create a `k8s_proxy`-scoped PAT to authenticate with an agent. |
 | `agent list` | `glab cluster agent list` | List agents in a project. |
 | `agent token list` | `glab cluster agent token list <agent-id>` | List tokens for an agent. |
@@ -1112,16 +1203,32 @@ Manage GitLab Agents for Kubernetes and clusters.
 
 ---
 
-## glab dependency-firewall (BETA)
+## glab dependency-firewall (EXPERIMENTAL)
 
-Configure GitLab Dependency Firewall for local package managers, and summarize blocked or flagged packages from a CI run. Aliased as `glab df`.
+Run local package managers through the GitLab Dependency Firewall, check a single package against the firewall policy, and summarize blocked or flagged packages from a CI run. Aliased as `glab df`.
 
 | Subcommand | Usage | Description |
 |---|---|---|
-| `configure` | `glab dependency-firewall configure <package-manager> [--repo-resolve <url>] [--repo-deploy <url>]` | Write a package manager's resolve/deploy registry URLs to `.gitlab/df/config.json`. Supported: `npm`. (BETA) |
-| `ci-summary` | `glab dependency-firewall ci-summary` | Read `.gitlab/df/ci-log.json` in the current directory and print blocked/flagged packages from the last run. (BETA) |
+| `package` | `glab dependency-firewall package <purl>` | Check one package URL against the firewall policy for the current project and report allow, warning, or blocked. No package manager binary required. (EXPERIMENTAL) |
+| `ci-summary` | `glab dependency-firewall ci-summary` | Read `.gitlab/df/ci-log.json` in the current directory and print blocked/flagged packages from the last run. (EXPERIMENTAL) |
+| `npm`, `pnpm`, `yarn` | `glab dependency-firewall npm <npm args>` | Run the JavaScript package manager through the firewall. (EXPERIMENTAL) |
+| `pip`, `pipenv`, `poetry`, `uv`, `twine` | `glab dependency-firewall pip <pip args>` | Run the Python tool through the firewall. (EXPERIMENTAL) |
+| `maven`, `gradle` | `glab dependency-firewall maven <mvn args>` | Run the JVM build tool through the firewall. (EXPERIMENTAL) |
+| `gem`, `bundle` | `glab dependency-firewall bundle <bundle args>` | Run the Ruby tool through the firewall. (EXPERIMENTAL) |
 
+The wrapper subcommands pass their arguments to the package manager and need a repository with a GitLab remote. The `configure` subcommand was removed; use the wrappers instead.
+
+`package` supports the PURL types `npm`, `pypi`, `maven`, and `gem`, and the PURL must include a version. It does not write to the CI log, so `ci-summary` does not include its result.
+
+Exit codes for `package`: `0` allow or warning, `1` misconfiguration or transport error, `3` blocked.
 Exit codes for `ci-summary`: `0` no blocked entries, `1` log could not be read, `3` at least one entry blocked.
+
+Examples:
+```sh
+glab df package pkg:npm/left-pad@1.3.0
+glab df npm install
+glab df ci-summary
+```
 
 ---
 
@@ -1149,13 +1256,19 @@ Manage glab's authentication state.
 | `--hostname` | | GitLab instance hostname. |
 | `--token` | `-t` | Personal access token. |
 | `--stdin` | | Read token from stdin. |
-| `--api-host` | `-a` | API host URL. |
+| `--web` | | Skip the login type prompt and use web/OAuth login. |
+| `--device` | | Use the OAuth 2.0 device authorization flow, for headless environments. Requires GitLab 17.9+. |
+| `--api-host` | `-a` | API endpoint hostname (or `hostname:port`), if different from `--hostname`. |
 | `--api-protocol` | `-p` | API protocol: `https` or `http`. |
 | `--git-protocol` | `-g` | Git protocol: `ssh`, `https`, or `http`. |
+| `--ssh-hostname` | | SSH hostname, for instances with a different SSH endpoint. |
+| `--container-registry-domains` | | Container registry and image dependency proxy domains, comma-separated. |
 | `--job-token` | `-j` | CI job token (for CI pipelines). |
-| `--use-keyring` | | Store token in OS keyring instead of config file. |
+| `--insecure-storage` | | Store the token as plaintext in the config file instead of the OS keyring. |
 
-Credentials are stored in `~/.config/glab-cli/config.yml`. Environment variables `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` override stored credentials.
+Credentials are stored in the OS keyring (macOS Keychain, Windows Credential Manager, or the Secret Service on Linux) when one is available. Without a keyring, in CI, or with `--insecure-storage`, they are stored as plaintext in the global config file (run `glab config path` to locate it). Environment variables `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` override stored credentials.
+
+OAuth against a self-managed instance needs an OAuth application client ID (config key `client_id`, or `$GITLAB_CLIENT_ID`); interactive login guides you through the setup.
 
 ### glab auth status flags
 
@@ -1185,34 +1298,57 @@ Manage glab settings.
 |---|---|---|
 | `edit` | `glab config edit` | Open the config file in the default editor. |
 | `get` | `glab config get <key>` | Print a configuration value. |
+| `path` | `glab config path [--dir]` | Print the location of the global config file (`--dir` prints its directory). |
 | `set` | `glab config set <key> <value>` | Set a configuration value. |
 
-Config file locations follow the XDG Base Directory specification (see `glab config --help` for the full search order and platform-specific paths).
+The config file location depends on the platform, so use `glab config path` instead of hard-coding it. Repository-local settings live in `.git/glab-cli/config.yml`.
 
-Available configuration keys:
+Most keys can also be set through an environment variable. Since glab 1.118.0 each unprefixed variable has a `GLAB_`-prefixed name that wins when both are set (for example `GLAB_NO_PROMPT` over `NO_PROMPT`).
+
+Global configuration keys:
 
 | Key | Description |
 |---|---|
-| `branch_prefix` | Prefix used by `glab stack` when naming generated branches (default: `$USER`, falling back to `glab-stack`). |
-| `browser` | Default browser. Override with `$BROWSER`. |
-| `check_update` | Notify of new versions (default: `true`). Override with `$GLAB_CHECK_UPDATE`. |
-| `display_hyperlinks` | Disable hyperlinks in terminal output if `false` (default: `true`). Override with `$FORCE_HYPERLINKS`. |
-| `duo_cli_auto_download` | Automatically download the Duo CLI binary without prompting. |
-| `duo_cli_auto_run` | Automatically run GitLab Duo CLI without prompting. |
-| `editor` | Default editor. Override with `$EDITOR`. |
-| `git_protocol` | Protocol for Git operations: `ssh` or `https` (default: `ssh`). |
-| `glab_pager` | Pager command, e.g. `less -R`. |
-| `glamour_style` | Markdown renderer style: `dark`, `light`, `notty`, or a custom glamour style. |
-| `host` | Default GitLab host (default: `https://gitlab.com`). |
-| `no_prompt` | Disable interactive prompts if `true` (default: `false`). Override with `$NO_PROMPT`. |
-| `notify_skill_updates` | Show a notice when an installed agent skill has updates available (default: `true`). Override with `$GLAB_NOTIFY_SKILL_UPDATES`. |
-| `orbit_local_auto_download` | Automatically download the Orbit local CLI binary without prompting. |
-| `orbit_local_auto_run` | Automatically run Orbit local CLI without prompting. |
-| `remote_alias` | Name of the `git remote` pointing at the GitLab repository, used when multiple remotes are configured. |
-| `show_whats_new` | Show a one-time post-upgrade banner pointing at `glab whatsnew` (default: `true`). Override with `$GLAB_SHOW_WHATS_NEW`. |
-| `telemetry` | Disable sending usage data to your GitLab instance if `false` (default: `true`). Override with `$GLAB_SEND_TELEMETRY`. |
-| `token` | GitLab access token (prefer env vars). |
-| `visual` | Takes precedence over `editor`. Override with `$VISUAL`. |
+| `branch_prefix` | Prefix used by `glab stack` when naming generated branches (default: `$USER`, falling back to `glab-stack`). Env: `GLAB_BRANCH_PREFIX`. |
+| `browser` | Browser used to open links. Env: `GLAB_BROWSER`, `BROWSER`. |
+| `check_update` | Check for new versions and notify. Env: `GLAB_CHECK_UPDATE`. |
+| `debug` | Log more detail, including Git commands and expanded aliases. Env: `GLAB_DEBUG`. |
+| `display_hyperlinks` | Show hyperlinks in terminal output (default: `true` for TTYs). Env: `GLAB_DISPLAY_HYPERLINKS`; `FORCE_HYPERLINKS=1` forces them outside a TTY. |
+| `duo_cli_auto_download` | Automatically download the Duo CLI binary without prompting. Env: `GLAB_DUO_CLI_AUTO_DOWNLOAD`. |
+| `duo_cli_auto_run` | Automatically run GitLab Duo CLI without prompting. Env: `GLAB_DUO_CLI_AUTO_RUN`. |
+| `editor` | Editor used for issues, MRs, etc. Also accepted as `visual`. Env: `GLAB_EDITOR`, `VISUAL`, `EDITOR`. |
+| `git_protocol` | Protocol for Git operations: `ssh` or `https`. Env: `GLAB_GIT_PROTOCOL`. |
+| `glab_pager` | Pager command, e.g. `less -R`. Env: `GLAB_PAGER`. |
+| `glamour_style` | Markdown renderer style: `dark`, `light`, `notty`, or a custom glamour style. Env: `GLAB_GLAMOUR_STYLE`. |
+| `host` | Default GitLab hostname. Env: `GITLAB_HOST`. |
+| `no_prompt` | Disable interactive prompts if `true`. Env: `GLAB_NO_PROMPT`, `NO_PROMPT`. |
+| `notify_skill_updates` | Show a notice when an installed agent skill has updates available. Env: `GLAB_NOTIFY_SKILL_UPDATES`. |
+| `orbit_cli_auto_download` | Automatically download the Orbit CLI binary without prompting. Renamed from `orbit_local_auto_download` in glab 1.119.0. Env: `GLAB_ORBIT_CLI_AUTO_DOWNLOAD`. |
+| `orbit_cli_auto_run` | Automatically run the Orbit CLI without prompting. Renamed from `orbit_local_auto_run` in glab 1.119.0. Env: `GLAB_ORBIT_CLI_AUTO_RUN`. |
+| `remote_alias` | Name of the `git remote` pointing at the GitLab repository, used when multiple remotes are configured. Env: `GLAB_REMOTE_ALIAS`. |
+| `show_whats_new` | Show a one-time post-upgrade banner pointing at `glab whatsnew`. Env: `GLAB_SHOW_WHATS_NEW`. |
+| `telemetry` | Send usage data to your GitLab instance; set to `false` to disable. Env: `GLAB_SEND_TELEMETRY`. |
+
+Per-host configuration keys (set with `--host <hostname>`):
+
+| Key | Description |
+|---|---|
+| `api_host` | Host for the API endpoint, if different from the host itself. Env: `GITLAB_API_HOST`. |
+| `api_protocol` | Protocol for the API endpoint: `http` or `https`. Env: `GLAB_API_PROTOCOL`. |
+| `artifact_registry_domains` | Domains backed by GitLab Artifact Registry, used by the Docker credential helper. Env: `GLAB_ARTIFACT_REGISTRY_DOMAINS`. |
+| `ca_cert` | Path to a CA certificate (PEM) for verifying the server's TLS certificate. Env: `GLAB_CA_CERT`. |
+| `client_cert` | Path to a client certificate (PEM) for mutual TLS. Env: `GLAB_CLIENT_CERT`. |
+| `client_key` | Path to the private key (PEM) matching `client_cert`. Env: `GLAB_CLIENT_KEY`. |
+| `client_id` | OAuth application client ID. Required for OAuth against a self-managed instance. Env: `GITLAB_CLIENT_ID`. |
+| `container_registry_domains` | Domains of associated container registries, used by the Docker credential helper. Env: `GLAB_CONTAINER_REGISTRY_DOMAINS`. |
+| `custom_headers` | Custom HTTP headers added to every request. Each header uses one of `value`, `valueFromEnv`, or `valueFromCommand`. |
+| `job_token` | CI job token, usually populated from `CI_JOB_TOKEN` when CI auto-login is enabled. |
+| `proxy` | Custom proxy for this host. Env: `GLAB_PROXY`. |
+| `skip_tls_verify` | Skip TLS certificate verification (development only). Env: `GLAB_SKIP_TLS_VERIFY`. |
+| `ssh_host` | Alternate hostname for SSH Git operations. Env: `GITLAB_SSH_HOST`. |
+| `subfolder` | Subfolder where GitLab is installed (e.g. `gitlab` for `https://example.com/gitlab/`). Env: `GITLAB_SUBFOLDER`. |
+| `token` | GitLab access token (prefer env vars). Env: `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, `OAUTH_TOKEN`. |
+| `use_keyring` | Store the host's credentials in the OS keyring. Set automatically by `glab auth login`. Env: `GLAB_USE_KEYRING`. |
 
 ### glab config get/set flags
 
@@ -1445,7 +1581,7 @@ Work with GitLab Duo AI assistant.
 
 | Subcommand | Usage | Description |
 |---|---|---|
-| `cli` | `glab duo cli [command]` | Run the GitLab Duo CLI (GitLab Duo Agent Platform in your terminal). Requires GitLab 19.2+. Downloads a separate binary on first use. |
+| `cli` | `glab duo cli [command]` | Run the GitLab Duo CLI (GitLab Duo Agent Platform in your terminal). Requires GitLab 19.2+, or GitLab 18.11 to 19.1 with beta and experimental features turned on. Downloads a separate binary on first use. |
 
 ### glab duo cli flags
 
@@ -1463,20 +1599,54 @@ Note: `glab duo ask` was removed; use `glab duo cli` instead.
 
 ## glab orbit (EXPERIMENTAL)
 
-Access the GitLab Knowledge Graph (product name: Orbit) from the CLI.
+Run the Orbit CLI (GitLab Knowledge Graph) through glab.
+
+```
+glab orbit [<command>] [--flags]
+```
+
+Since glab 1.115.0, `glab orbit` no longer has subcommands of its own (`orbit local` and `orbit remote ...` were removed). Every command and flag, including `--help`, is forwarded to the managed Orbit binary, which glab downloads, verifies, and updates on first use. glab passes your GitLab credential to the binary, so remote commands need no separate login.
+
+Prerequisites: run `glab auth login`, and Orbit must be enabled for your namespace (the `knowledge_graph` feature flag).
+
+| Flag | Short | Description |
+|---|---|---|
+| `--install` | | Install the Orbit binary without running it. |
+| `--update` | | Check for and install updates to the binary. |
+| `--yes` | `-y` | Skip confirmation prompts. |
+
+Config keys `orbit_cli_auto_run` and `orbit_cli_auto_download` skip the run/download confirmation prompts.
+
+Examples (the commands themselves come from the Orbit binary; run `glab orbit --help` once it is installed):
+```sh
+glab orbit --install
+glab orbit setup
+glab orbit status
+glab orbit query ./query.json
+glab orbit graph-status --full-path gitlab-org/gitlab
+glab orbit index .
+```
+
+---
+
+## glab govern (EXPERIMENTAL)
+
+Manage AI agent governance for external agents running against GitLab projects: record agent sessions as audit events and diagnose the setup.
 
 | Subcommand | Usage | Description |
 |---|---|---|
-| `setup` | `glab orbit setup` | Guided setup: verify access, install the skill, install the local CLI. (EXPERIMENTAL) |
-| `local` | `glab orbit local [command]` | Run the Orbit local CLI (downloads the binary on first use). (EXPERIMENTAL) |
-| `remote status` | `glab orbit remote status` | Show GitLab Knowledge Graph cluster health. (EXPERIMENTAL) |
-| `remote schema` | `glab orbit remote schema [node...]` | Show the Knowledge Graph ontology. (EXPERIMENTAL) |
-| `remote dsl` | `glab orbit remote dsl` | Show the query DSL JSON Schema. (EXPERIMENTAL) |
-| `remote query` | `glab orbit remote query <file\|->` | Execute a Knowledge Graph query. (EXPERIMENTAL) |
-| `remote graph-status` | `glab orbit remote graph-status --full-path <path>` | Show indexing progress for a namespace or project. (EXPERIMENTAL) |
-| `remote tools` | `glab orbit remote tools` | Show the Knowledge Graph MCP tool manifest. (EXPERIMENTAL) |
+| `setup` | `glab govern setup [-y]` | Install Stop and SessionEnd hooks in `~/.claude/settings.json` so agent sessions are recorded. Safe to rerun. (EXPERIMENTAL) |
+| `doctor` | `glab govern doctor` | Check authentication, `glab` in `PATH`, Claude Code hooks, and API connectivity; prints a fix for each failed check. (EXPERIMENTAL) |
+| `audit sync` | `glab govern audit sync [--complete] [--silent]` | Read new entries from the local agent transcript and post them to GitLab as audit events. Called by the hooks. (EXPERIMENTAL) |
 
-Exit codes for `orbit remote`: `1` generic error, `2` endpoint unavailable (feature flag off), `3` not authenticated, `4` access denied, `5` rate limited.
+### glab govern audit sync flags
+
+| Flag | Description |
+|---|---|
+| `--complete` | Mark the session as completed. Used by the SessionEnd hook. |
+| `--silent` | Suppress all output. Used when invoked from hooks. |
+
+Note: `glab govern setup` edits your Claude Code user settings. Run it only if you want agent sessions synced to GitLab.
 
 ---
 
@@ -1508,6 +1678,7 @@ Install and manage glab's bundled agent skills, following the Agent Skills speci
 
 | Subcommand | Usage | Description |
 |---|---|---|
+| `get` | `glab skills get <name> [<path>]` | Print a file from a bundled agent skill without installing it. The path defaults to `SKILL.md`. (EXPERIMENTAL) |
 | `install` | `glab skills install [name]` | Install glab's bundled agent skills. (EXPERIMENTAL) |
 | `list` | `glab skills list` | List the available bundled agent skills. (EXPERIMENTAL) |
 | `update` | `glab skills update [name]` | Update installed agent skills to the current shipped version. (EXPERIMENTAL) |
@@ -1567,6 +1738,7 @@ Create and manage stacked diffs. Each stack entry creates a separate MR. Metadat
 |---|---|---|
 | `amend` | `glab stack amend [files]` | Add more changes to the current stacked diff. (EXPERIMENTAL) |
 | `create` | `glab stack create <name>` | Create a new stack. (EXPERIMENTAL) |
+| `delete` | `glab stack delete [<stack-name>]` | Delete a stack's local metadata. Branches, commits, and MRs are not affected. `-y/--yes` skips confirmation. (EXPERIMENTAL) |
 | `first` | `glab stack first` | Move to the first diff in the stack. (EXPERIMENTAL) |
 | `infer` | `glab stack infer <revision-range>` | Add layers to a stack based on a range of commits. (EXPERIMENTAL) |
 | `last` | `glab stack last` | Move to the last diff in the stack. (EXPERIMENTAL) |
@@ -1585,6 +1757,15 @@ Create and manage stacked diffs. Each stack entry creates a separate MR. Metadat
 |---|---|---|
 | `--message` | `-m` | Description of the change (alias: `--description`). |
 | `--description` | `-d` | Description of the change. |
+
+### glab stack reorder flags
+
+| Flag | Description |
+|---|---|
+| `--continue` | Continue a reorder after resolving conflicts (finish the rebase with `git rebase --continue` first). |
+| `--abort` | Abort a reorder and restore the original branch order. |
+
+`glab stack reorder` rebases each branch onto its new parent and retargets each MR. Nothing is pushed until you run `glab stack sync`.
 
 ### glab stack sync flags
 

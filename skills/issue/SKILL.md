@@ -33,7 +33,10 @@ Useful flags:
 - `--assignee "<username>"` — assign immediately
 - `--milestone "<title>"` — link to a milestone
 - `--confidential` — mark as confidential
-- `--web` — open in browser after creation
+- `--description-file <file>` — read the description from a file (`-` for stdin); prefer this over `--description` for long or multi-line bodies
+- `--attach <file>` — upload a file and reference it at the end of the description (experimental, repeatable)
+- `--yes` — skip the confirmation prompt (needed for non-interactive use)
+- `--web` — continue issue creation in the browser
 
 #### List issues
 
@@ -41,12 +44,13 @@ Useful flags:
 glab issue list
 ```
 
-Filters:
-- `--state opened|closed|all`
-- `--assignee "<username>"`
+Lists open issues by default. Filters:
+- `--closed`, `--all` — change which states are listed
+- `--assignee "<username>"` — use `--assignee=@me` for issues assigned to the current user
+- `--author "<username>"`
 - `--label "<label>"`
-- `--mine` — issues assigned to the current user
 - `--milestone "<title>"`
+- `--search "<text>"`
 
 #### View an issue
 
@@ -59,6 +63,7 @@ glab issue view <number> --web   # open in browser
 
 ```bash
 glab issue note <number> --message "<comment text>"
+glab issue note <number> --message "<comment text>" --attach ./screenshot.png   # experimental
 ```
 
 #### Update an issue
@@ -67,7 +72,7 @@ glab issue note <number> --message "<comment text>"
 glab issue update <number> --title "<new title>" --description "<new body>"
 ```
 
-Other flags: `--assignee`, `--label`, `--remove-label`, `--milestone`, `--confidential`.
+Other flags: `--description-file`, `--attach`, `--assignee`, `--label`, `--unlabel`, `--milestone`, `--confidential`.
 
 #### Close an issue
 

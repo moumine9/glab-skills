@@ -37,15 +37,17 @@ glab ci list
 ```
 
 Filters:
-- `--branch <branch>` — filter by branch
+- `--ref <branch>` — filter by branch or tag
 - `--status running|pending|success|failed|canceled`
-- `--limit <N>` — how many to show
+- `--per-page <N>` — how many to show
+- `--output json` — machine-readable output
 
 #### View a pipeline (interactive job browser)
 
 ```bash
 glab ci view
-glab ci view <pipeline-id>
+glab ci view <branch>
+glab ci view --pipelineid <pipeline-id>
 ```
 
 Opens an interactive TUI to browse jobs and their statuses.
@@ -54,22 +56,24 @@ Opens an interactive TUI to browse jobs and their statuses.
 
 ```bash
 glab ci trace
+glab ci trace <job-id|job-name>
 ```
 
-Streams the log of a running or failed job. Prompts to pick a job if multiple are running.
+Streams the log of a running or failed job. Prompts to pick a job if none is given. Use `--branch` or `--pipeline-id` to pick the pipeline.
 
-#### Retry a failed pipeline
+#### Retry a job
 
 ```bash
-glab ci retry <pipeline-id>
+glab ci retry <job-id|job-name>
 ```
 
-Retries all failed jobs in the pipeline.
+Retries a single job. Prompts to pick a job if none is given; `--pipeline-id <id>` selects the pipeline to search.
 
-#### Cancel a running pipeline
+#### Cancel a running pipeline or job
 
 ```bash
-glab ci cancel <pipeline-id>
+glab ci cancel pipeline <pipeline-id>
+glab ci cancel job <job-id>
 ```
 
 #### Run (trigger) a new pipeline
@@ -80,7 +84,9 @@ glab ci run
 
 Flags:
 - `--branch <branch>` — run on a specific branch
-- `--variables-env "KEY=value"` — pass CI variables
+- `--variables-env "KEY:value"` — pass CI variables (repeat the flag or comma-separate for several)
+- `--input "key:value"` — pass pipeline inputs
+- `--mr` — run a merge request pipeline instead of a branch pipeline
 
 #### Lint a `.gitlab-ci.yml` file
 
