@@ -52,6 +52,8 @@ glab ci view --pipelineid <pipeline-id>
 
 Opens an interactive TUI to browse jobs and their statuses.
 
+Use `h`, `j`, `k`, and `l` to navigate its modals. Job names can be scrolled to reveal truncated text.
+
 #### Trace job logs (stream output)
 
 ```bash
@@ -94,6 +96,14 @@ Flags:
 glab ci lint
 glab ci lint <path/to/.gitlab-ci.yml>
 ```
+
+#### Look up an inherited CI variable
+
+```bash
+glab variable get <key> --inherited
+```
+
+If the variable is absent at the selected project or group, this searches parent groups, then instance variables. Variable values may contain secrets; only display them when requested.
 
 ---
 

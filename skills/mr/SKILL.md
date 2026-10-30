@@ -29,7 +29,8 @@ glab mr create --title "<title>" --description "<body>" --target-branch <branch>
 ```
 
 Useful flags:
-- `--fill` — pre-fill title and description from the last commit
+- `--fill` — fill title and description from commits; pushes the branch unless `--push=false` is set
+- `--template <name-or-path>` — use a repository MR template or a template file
 - `--draft` — mark as draft
 - `--label "<label>"` — add a label
 - `--assignee "<username>"` — assign to someone
@@ -84,6 +85,7 @@ Flags:
 
 ```bash
 glab mr checkout <number>
+glab mr checkout <number> --worktree ../review-mr-<number>
 ```
 
 #### View the diff
@@ -104,7 +106,7 @@ glab mr close <number>
 glab mr update <number> --title "<new title>" --description "<new body>"
 ```
 
-Other update flags: `--description-file`, `--attach`, `--draft`, `--ready`, `--assignee`, `--reviewer`, `--label`, `--unlabel`, `--target-branch`.
+Other update flags: `--description-file`, `--attach`, `--draft`, `--ready`, `--assignee`, `--reviewer`, `--label`, `--unlabel`, `--target-branch`. When selecting by branch, `--state opened|closed|merged|locked|any` filters the lookup (default: `any`); IDs and URLs ignore this flag.
 
 #### Comment on an MR
 
@@ -123,14 +125,17 @@ glab mr note resolve <number> <discussion-id>
 
 #### Review an MR with pending comments
 
-Queue comments with `--draft`; they stay visible only to you until published:
+Use `glab mr note draft` for pending comments; they stay visible only to you until published:
 
 ```bash
-glab mr note create <number> --draft --file <path> --line <n> --message "<comment text>"
-glab mr note publish <number> --yes --message "<summary>" --reviewer-state requested_changes
+glab mr note draft create <number> --file <path> --line <n> --message "<comment text>"
+glab mr note draft list <number>
+glab mr note draft publish <number> --yes --message "<summary>" --reviewer-state requested_changes
 ```
 
 `--reviewer-state` accepts `requested_changes` or `reviewed`. It does not approve; use `glab mr approve` for that. `--yes` is required when not running interactively.
+
+`draft create` prints the pending comment ID. Use `glab mr note draft update <number> <draft-note-id> --message "<new text>"` or `glab mr note draft delete <number> <draft-note-id>` to revise your pending review. Attachments upload immediately, even while the comment is pending.
 
 ---
 

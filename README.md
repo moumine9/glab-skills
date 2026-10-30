@@ -4,11 +4,11 @@ Claude Code skills and hooks for working with GitLab via the `glab` CLI.
 
 ## What's in here
 
-This repo has four skills covering common GitLab operations: auth, merge requests, issues, and CI pipelines. It also includes `glab-auth-guard.sh`, a PostToolUse hook that detects authentication errors in glab output and prompts you to log in, and a `settings.local.json` with pre-approved glab command permissions so Claude does not ask for confirmation on every call. **247 commands** are documented across `docs/commands.md` and `docs/reference.md`.
+This repo has four skills covering common GitLab operations: auth, merge requests, issues, and CI pipelines. It also includes `glab-auth-guard.sh`, a PostToolUse hook that detects authentication errors in glab output and prompts you to log in, and a `settings.local.json` with pre-approved glab command permissions so Claude does not ask for confirmation on every call. **256 commands** are documented across `docs/commands.md` and `docs/reference.md`.
 
 ## Requirements
 
-- `glab` CLI installed
+- `glab` CLI installed (documentation and skills verified against **1.126.0**)
 - Claude Code installed
 
 ---
