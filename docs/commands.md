@@ -1,5 +1,7 @@
 # glab command list
 
+Verified against [glab 1.126.0](https://gitlab.com/gitlab-org/cli/-/releases/v1.126.0).
+
 Quick reference for all available `glab` commands. For flags and examples, see [reference.md](reference.md).
 
 `*` = experimental
@@ -19,10 +21,14 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | `glab mr issues` | List issues related to an MR |
 | `glab mr list` | List MRs |
 | `glab mr merge` | Merge an MR |
-| `glab mr note create` * | Create a comment or discussion (supports `--draft`, `--internal`) |
+| `glab mr note create` * | Create a comment or discussion (supports `--internal`) |
 | `glab mr note delete` * | Delete a note |
 | `glab mr note list` * | List MR discussions |
-| `glab mr note publish` * | Publish all your pending review comments |
+| `glab mr note draft create` * | Add a pending review comment |
+| `glab mr note draft delete` * | Delete a pending review comment |
+| `glab mr note draft list` * | List your pending review comments |
+| `glab mr note draft publish` * | Publish all your pending review comments |
+| `glab mr note draft update` * | Update a pending review comment |
 | `glab mr note reopen` * | Reopen a discussion |
 | `glab mr note resolve` * | Resolve a discussion |
 | `glab mr note update` * | Update the body of a note |
@@ -292,24 +298,26 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | `glab cluster agent update-kubeconfig` | Update kubeconfig for agent access |
 | `glab cluster graph` * | Query Kubernetes object graph via agent |
 
-## glab dependency-firewall (df) *
+## glab dependency-firewall (df, beta)
 
 | Command | Description |
 |---------|-------------|
-| `glab dependency-firewall bundle` * | Run Bundler through the Dependency Firewall |
-| `glab dependency-firewall ci-summary` * | Summarize blocked/flagged packages from the CI log |
-| `glab dependency-firewall gem` * | Run gem through the Dependency Firewall |
-| `glab dependency-firewall gradle` * | Run Gradle through the Dependency Firewall |
-| `glab dependency-firewall maven` * | Run Maven through the Dependency Firewall |
-| `glab dependency-firewall npm` * | Run npm through the Dependency Firewall |
-| `glab dependency-firewall package` * | Check a single package URL (PURL) against the firewall policy |
-| `glab dependency-firewall pip` * | Run pip through the Dependency Firewall |
-| `glab dependency-firewall pipenv` * | Run Pipenv through the Dependency Firewall |
-| `glab dependency-firewall pnpm` * | Run pnpm through the Dependency Firewall |
-| `glab dependency-firewall poetry` * | Run Poetry through the Dependency Firewall |
-| `glab dependency-firewall twine` * | Run Twine through the Dependency Firewall |
-| `glab dependency-firewall uv` * | Run uv through the Dependency Firewall |
-| `glab dependency-firewall yarn` * | Run Yarn through the Dependency Firewall |
+| `glab dependency-firewall bundle` | Run Bundler through the Dependency Firewall |
+| `glab dependency-firewall ci-summary` | Summarize blocked/flagged packages from the CI log |
+| `glab dependency-firewall gem` | Run gem through the Dependency Firewall |
+| `glab dependency-firewall gradle` | Run Gradle through the Dependency Firewall |
+| `glab dependency-firewall maven` | Run Maven through the Dependency Firewall |
+| `glab dependency-firewall npm` | Run npm through the Dependency Firewall |
+| `glab dependency-firewall package` | Check a single package URL (PURL) against the firewall policy |
+| `glab dependency-firewall pip` | Run pip through the Dependency Firewall |
+| `glab dependency-firewall pipenv` | Run Pipenv through the Dependency Firewall |
+| `glab dependency-firewall pnpm` | Run pnpm through the Dependency Firewall |
+| `glab dependency-firewall poetry` | Run Poetry through the Dependency Firewall |
+| `glab dependency-firewall twine` | Run Twine through the Dependency Firewall |
+| `glab dependency-firewall uv` | Run uv through the Dependency Firewall |
+| `glab dependency-firewall yarn` | Run Yarn through the Dependency Firewall |
+| `glab dependency-firewall cargo` | Run Cargo through the firewall |
+| `glab dependency-firewall go` | Run Go through the firewall |
 
 ## glab auth
 
@@ -330,6 +338,12 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | `glab config get` | Print a configuration value |
 | `glab config path` | Print the location of the global config file |
 | `glab config set` | Set a configuration value |
+
+## glab deploy-token
+
+| Command | Description |
+|---------|-------------|
+| `glab deploy-token list` | List project or group deploy tokens |
 
 ## glab token
 
@@ -398,12 +412,14 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 | Command | Description |
 |---------|-------------|
 | `glab duo cli` | Run the GitLab Duo CLI agent |
+| `glab duo cli update` | Update the managed GitLab Duo CLI binary |
 
 ## glab orbit *
 
 | Command | Description |
 |---------|-------------|
-| `glab orbit` * | Run the Orbit CLI (every command and flag is forwarded to the managed Orbit binary) |
+| `glab orbit` * | Run the Orbit CLI (arguments are forwarded to the managed binary) |
+| `glab orbit update` * | Update the managed Orbit CLI binary |
 
 ## glab govern *
 
@@ -447,7 +463,7 @@ Quick reference for all available `glab` commands. For flags and examples, see [
 
 | Command | Description |
 |---------|-------------|
-| `glab mcp serve` * | Start an MCP server via stdio |
+| `glab mcp serve` * | Start an MCP server via stdio (deprecated) |
 
 ## glab stack *
 

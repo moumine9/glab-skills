@@ -37,6 +37,7 @@ Useful flags:
 - `--attach <file>` — upload a file and reference it at the end of the description (experimental, repeatable)
 - `--yes` — skip the confirmation prompt (needed for non-interactive use)
 - `--web` — continue issue creation in the browser
+- `--template <name-or-path>` — use a repository issue template or a template file
 
 #### List issues
 
@@ -47,10 +48,12 @@ glab issue list
 Lists open issues by default. Filters:
 - `--closed`, `--all` — change which states are listed
 - `--assignee "<username>"` — use `--assignee=@me` for issues assigned to the current user
+- `--assignee=@none`, `--assignee=@any` — filter unassigned or assigned issues
 - `--author "<username>"`
 - `--label "<label>"`
 - `--milestone "<title>"`
 - `--search "<text>"`
+- `--created-after`, `--created-before`, `--updated-after`, `--updated-before` — filter by RFC 3339 timestamp, such as `2026-10-01T00:00:00Z`
 
 #### View an issue
 
@@ -63,6 +66,7 @@ glab issue view <number> --web   # open in browser
 
 ```bash
 glab issue note <number> --message "<comment text>"
+glab issue note <number> --internal --message "<project-member comment>"
 glab issue note <number> --message "<comment text>" --attach ./screenshot.png   # experimental
 ```
 
@@ -73,6 +77,8 @@ glab issue update <number> --title "<new title>" --description "<new body>"
 ```
 
 Other flags: `--description-file`, `--attach`, `--assignee`, `--label`, `--unlabel`, `--milestone`, `--confidential`.
+
+Track time with `glab issue update <number> --estimate 2d --spend 1h30m`. `--remove-estimate` clears the estimate; `--remove-time-spent` clears all recorded time. `glab issue view` shows time tracking statistics.
 
 #### Close an issue
 

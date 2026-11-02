@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.126.0] - 2026-10-30
+
+### Changed
+
+- Aligned the glab-skills version with the supported glab CLI version: 1.126.0.
+- Expanded the command index from 247 to 256 entries and refreshed the CLI reference and all four skills for [glab 1.126.0](https://gitlab.com/gitlab-org/cli/-/releases/v1.126.0), covering changes since 1.120.0.
+- Migrated pending MR reviews to `glab mr note draft create|list|update|delete|publish`; removed the obsolete `note create --draft` and `note publish` examples.
+- Documented MR worktrees, template file paths, branch lookup state, issue date/assignment filters, internal notes, time tracking, and inherited CI variable lookup.
+- Documented auth status JSON, Git credential helper setup, default-host selection, and host restrictions for environment tokens.
+- Added deploy-token listing, token self-rotation, SSH key replacement, managed binary updates, Cargo/Go firewall wrappers, registry login options, work item iterations, and local stack sync.
+- Updated governance setup options, security profile identifiers, and the `glab mcp serve` deprecation. Dependency Firewall is now marked BETA.
+
 ## [1.2.0] - 2026-09-30
 
 ### Added
@@ -70,7 +82,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial versioned release: skills for `auth`, `mr`, `issue`, and `ci`; `glab-auth-guard.sh` PostToolUse hook; CLI reference docs (`docs/commands.md`, `docs/reference.md`).
 
-[unreleased]: https://github.com/moumine9/glab-skills/compare/v1.2.0...HEAD
+[unreleased]: https://github.com/moumine9/glab-skills/compare/v1.126.0...HEAD
+[1.126.0]: https://github.com/moumine9/glab-skills/compare/v1.2.0...v1.126.0
 [1.2.0]: https://github.com/moumine9/glab-skills/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/moumine9/glab-skills/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/moumine9/glab-skills/releases/tag/v1.0.0
